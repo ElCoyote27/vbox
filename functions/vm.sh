@@ -104,6 +104,14 @@ create_vm() {
     VBoxManage storagectl $name --name 'IDE' --add ide --hostiocache on
     VBoxManage storagectl $name --name 'SATA' --add sata --hostiocache on
 
+    # Add first serial port
+    VBoxManage modifyvm $name --uart1 0x3F8 4
+    if [ "x${name}" = "x${vm_name_prefix}instack" ]; then
+        VBoxManage modifyvm $name --uartmode1 server "$HOME/serial-${name}"
+        echo "Serial Port: socat unix-connect:$HOME/serial-${name} stdio,raw,echo=0,escape=0x11"
+	echo "Serial Port: CTRL-q to disconnect"
+    fi
+
     # Create and attach the main hard drive
     add_disk_to_vm $name 0 $disk_mb
 }
