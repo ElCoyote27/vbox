@@ -108,7 +108,7 @@ create_vm() {
     VBoxManage modifyvm $name --uart1 0x3F8 4
     if [ "x${name}" = "x${vm_name_prefix}instack" ]; then
         VBoxManage modifyvm $name --uartmode1 server "$HOME/serial-${name}"
-        echo "Serial Port: socat unix-connect:$HOME/serial-${name} stdio,raw,echo=0,escape=0x11"
+        echo "Serial Port: socat unix-connect:$HOME/serial-${name} stdio,raw,echo=0,icanon=0,escape=0x11,b115200"
 	echo "Serial Port: CTRL-q to disconnect"
     fi
 
