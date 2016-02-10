@@ -38,7 +38,7 @@ esac
 ./actions/create-interfaces.sh || exit 1
 
 # Create and launch master node
-./actions/master-node-create-and-install.sh || exit 1
+./actions/undercloud-node-create-and-install.sh || exit 1
 
 # Create and launch slave nodes
-./actions/slave-nodes-create-and-boot.sh || exit 1
+./actions/baremetal-nodes-create-and-boot.sh || exit 1
