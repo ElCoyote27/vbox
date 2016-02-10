@@ -1,2 +1,2 @@
 # vbox
-VirtualBox scripts for provisionning an OSP tripleo infra.
+VirtualBox scripts for provisionning a OSP tripleo infra.
