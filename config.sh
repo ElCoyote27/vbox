@@ -103,7 +103,7 @@ elif [ "$CONFIG_FOR" = "8GB" ]; then
   cluster_size=3
 else
   # Section for custom configuration
-  cluster_size=3
+  cluster_size=1
 fi
 
 # Slave node settings. This section allows you to define CPU count for each slave node.
@@ -135,8 +135,6 @@ else
   vm_slave_cpu_default=1
 
   vm_slave_cpu[1]=1
-  vm_slave_cpu[2]=1
-  vm_slave_cpu[3]=1
 fi
 
 # This section allows you to define RAM size in MB for each slave node.
@@ -184,8 +182,6 @@ else
   vm_slave_memory_default=1024
 
   vm_slave_memory_mb[1]=2048
-  vm_slave_memory_mb[2]=1024
-  vm_slave_memory_mb[3]=1024
 fi
 
 # Within demo cluster created by this script, all slaves (controller
