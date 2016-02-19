@@ -19,6 +19,9 @@ source ./functions/memory.sh
 # Get the first available ISO from the directory 'iso'
 iso_path=`ls -1t iso/*.iso 2>/dev/null | head -1`
 
+# This file will carry information about the serial ports and instack's IP addres
+vm_serial_info="${HOME}/README_vbox_console.txt"
+
 # Every Mirantis OpenStack machine name will start from this prefix
 vm_name_prefix=OSP-
 
@@ -31,7 +34,7 @@ vm_name_prefix=OSP-
 rm_network=0
 
 # Please add the IPs accordingly if you going to create non-default NICs number
-# 10.20.0.1/24   - Mirantis OpenStack Admin network
+# 10.20.0.1/24   - ctlplane
 # 172.16.0.1/24  - OpenStack Public/External/Floating network
 # 172.16.1.1/24  - OpenStack Fixed/Internal/Private network
 # 192.168.0.1/24 - OpenStack Management network
@@ -75,7 +78,7 @@ mask="255.255.255.0"
   esac
 
 # Master node settings
-vm_master_memory_mb=8192
+vm_master_memory_mb=16384
 vm_master_disk_mb=65535
 
 # Master node access to the internet through the host system, using VirtualBox NAT adapter

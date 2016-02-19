@@ -25,6 +25,9 @@ source ./functions/vm.sh
 source ./functions/network.sh
 source ./functions/product.sh
 
+# Create the serial port and IP info file..
+echo "# $(date)" | tee ${vm_serial_info}
+
 # Create master node for the product
 # Get variables "host_nic_name" for the master node
 get_instack_name_ifaces
@@ -37,8 +40,13 @@ echo
 # Add additional NICs
 add_hostonly_adapter_to_vm $name 2 "${host_nic_name[1]}"
 
+add_hostonly_adapter_to_vm $name 3 "${host_nic_name[2]}"
+
 # Add NAT adapter for internet access
-add_nat_adapter_to_vm $name 3 $vm_master_nat_network
+# add_nat_adapter_to_vm $name 3 $vm_master_nat_network
+
+# Add bridged adapter to VM (replaces nic1)
+add_bridge_adapter_to_vm $name 4 "bond0"
 
 # Mount ISO with installer
 # mount_iso_to_vm $name $iso_path
@@ -46,6 +54,24 @@ add_nat_adapter_to_vm $name 3 $vm_master_nat_network
 # Start virtual machine with the master node
 echo
 start_vm $name
+
+# Wait until guestOS is up
+sleep 1s
+vmaddr=$(VBoxManage showvminfo OSP-instack|grep NIC.4|sed -e 's/.*MAC: *//' -e 's/,.*//')
+if [ "x${vmaddr}" != "x" ]; then
+	echo -n "Trying to obtain IP addr for MAC ${vmaddr}..."
+	i=1 ; temp_ip=""
+	while [ $i -lt 120 ]
+	do
+		sleep 1s ; echo -n "."
+		temp_ip=$(arp -a|sed -e 's/://g'|grep -i ${vmaddr}|sed -e 's/.*(//' -e 's/).*//')
+		if [ "x${temp_ip}" != "x" ]; then
+			echo "${name} is at IP: ${temp_ip}" | tee -a ${vm_serial_info}
+			vm_master_ip="${temp_ip}"
+			i=121
+		fi
+	done
+fi
 
 if [ "$skipinstackmenu" = "yes" ]; then
   wait_for_instack_menu $vm_master_ip $vm_master_username $vm_master_password "$vm_master_prompt"

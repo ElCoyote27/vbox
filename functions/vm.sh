@@ -104,13 +104,11 @@ create_vm() {
     VBoxManage storagectl $name --name 'IDE' --add ide --hostiocache on
     VBoxManage storagectl $name --name 'SATA' --add sata --hostiocache on
 
-    # Add first serial port
+    # Add first serial port (All VMs)
     VBoxManage modifyvm $name --uart1 0x3F8 4
-    if [ "x${name}" = "x${vm_name_prefix}instack" ]; then
-        VBoxManage modifyvm $name --uartmode1 server "$HOME/serial-${name}"
-        echo "Serial Port: socat unix-connect:$HOME/serial-${name} stdio,raw,echo=0,icanon=0,escape=0x11,b115200"|tee -a ${HOME}/README_vbox_console.txt
-	echo "Serial Port: CTRL-q to disconnect"|tee -a ${HOME}/README_vbox_console.txt
-    fi
+    VBoxManage modifyvm $name --uartmode1 server "$HOME/serial-${name}"
+    echo "Serial Port: socat unix-connect:$HOME/serial-${name} stdio,raw,echo=0,icanon=0,escape=0x11,b115200"|tee -a ${vm_serial_info}
+    echo "Serial Port: CTRL-q to disconnect"|tee -a ${vm_serial_info}
 
     # Create and attach the main hard drive
     add_disk_to_vm $name 0 $disk_mb
@@ -138,7 +136,20 @@ add_nat_adapter_to_vm() {
     VBoxManage modifyvm $name --nic${id} nat --nictype${id} 82540EM \
                         --cableconnected${id} on --macaddress${id} auto --natnet${id} "${nat_network}"
     VBoxManage modifyvm  $name  --nicpromisc${id} allow-all
-    VBoxManage controlvm $name setlinkstate${id} on
+#    VBoxManage controlvm $name setlinkstate${id} on
+}
+
+add_bridge_adapter_to_vm() {
+    name=$1
+    id=$2
+    nic=$3
+    echo "Adding Bridge adapter to $name for outbound network access through the host network..."
+
+    # Add Intel PRO/1000 MT Desktop (82540EM) card to VM. The card is 1Gbps.
+    VBoxManage modifyvm $name --nic${id} bridged --nictype${id} 82540EM \
+                        --cableconnected${id} on --macaddress${id} auto --bridgeadapter${id} "$nic"
+    VBoxManage modifyvm  $name  --nicpromisc${id} allow-all
+#    VBoxManage controlvm $name setlinkstate${id} on
 }
 
 add_disk_to_vm() {
