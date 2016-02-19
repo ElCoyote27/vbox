@@ -108,7 +108,7 @@ create_vm() {
     VBoxManage modifyvm $name --uart1 0x3F8 4
     VBoxManage modifyvm $name --uartmode1 server "$HOME/serial-${name}"
     # Not: b1152000 is not a typo (it's ten times faster than 115200 if your VBox supports it)
-    echo "Serial Port: socat unix-connect:$HOME/serial-${name} stdio,raw,echo=0,icanon=0,escape=0x11,b1152000"|tee -a ${vm_serial_info}
+    echo "Serial Port: socat unix-connect:$HOME/serial-${name} stdio,raw,sane,echo=0,icanon=0,escape=0x11,b1152000"|tee -a ${vm_serial_info}
     echo "Serial Port: CTRL-q to disconnect"|tee -a ${vm_serial_info}
 
     # Create and attach the main hard drive
