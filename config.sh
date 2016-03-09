@@ -49,7 +49,7 @@ mask="255.255.255.0"
     Linux)
       os_type="linux"
       if [ "$(nproc)" -gt "1" ]; then
-        vm_master_cpu_cores=2
+        vm_master_cpu_cores=4
       else
         vm_master_cpu_cores=1
       fi

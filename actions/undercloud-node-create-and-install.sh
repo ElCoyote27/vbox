@@ -42,11 +42,12 @@ add_hostonly_adapter_to_vm $name 2 "${host_nic_name[1]}"
 
 add_hostonly_adapter_to_vm $name 3 "${host_nic_name[2]}"
 
-# Add NAT adapter for internet access
-# add_nat_adapter_to_vm $name 3 $vm_master_nat_network
-
 # Add bridged adapter to VM (replaces nic1)
 add_bridge_adapter_to_vm $name 4 "bond0"
+
+# Add NAT adapter for internet access for all systems
+# add_nat_adapter_to_vm $name 5 $vm_master_nat_network
+
 
 # Mount ISO with installer
 # mount_iso_to_vm $name $iso_path
@@ -81,6 +82,7 @@ fi
 #wait_for_product_vm_to_install $vm_master_ip $vm_master_username $vm_master_password "$vm_master_prompt"
 
 # Enable outbound network/internet access for the machine
+echo enable_outbound_network_for_product_vm $vm_master_ip $vm_master_username $vm_master_password "$vm_master_prompt" 3 $vm_master_nat_gateway
 enable_outbound_network_for_product_vm $vm_master_ip $vm_master_username $vm_master_password "$vm_master_prompt" 3 $vm_master_nat_gateway
 
 # Report success

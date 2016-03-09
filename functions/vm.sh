@@ -93,8 +93,11 @@ create_vm() {
 
     # Set the real-time clock (RTC) operate in UTC time
     # Set memory and CPU parameters
-    # Set video memory to 16MB, so VirtualBox does not complain about "non-optimal" settings in the UI
-    VBoxManage modifyvm $name --rtcuseutc on --memory $memory_mb --cpus $cpu_cores --vram 16
+    # Set video memory to 64MB, so VirtualBox does not complain about "non-optimal" settings in the UI
+    VBoxManage modifyvm $name --rtcuseutc on --memory $memory_mb --cpus $cpu_cores --vram 64
+
+    # Enable Page Fusion
+    VBoxManage modifyvm $name --pagefusion on
 
     # Configure main network interface for management/PXE network
     add_hostonly_adapter_to_vm $name 1 "$nic"
@@ -137,7 +140,7 @@ add_nat_adapter_to_vm() {
     VBoxManage modifyvm $name --nic${id} nat --nictype${id} 82540EM \
                         --cableconnected${id} on --macaddress${id} auto --natnet${id} "${nat_network}"
     VBoxManage modifyvm  $name  --nicpromisc${id} allow-all
-#    VBoxManage controlvm $name setlinkstate${id} on
+    VBoxManage controlvm $name setlinkstate${id} on
 }
 
 add_bridge_adapter_to_vm() {
