@@ -23,7 +23,7 @@ iso_path=`ls -1t iso/*.iso 2>/dev/null | head -1`
 vm_serial_info="${HOME}/README_vbox_console.txt"
 
 # Every Mirantis OpenStack machine name will start from this prefix
-vm_name_prefix=OSP-
+vm_name_prefix=osp-
 
 # By default, all available network interfaces vboxnet won't be removed,
 # if their IP addresses don't match with instack_master_ips (10.20.0.1 172.16.0.254
