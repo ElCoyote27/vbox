@@ -70,13 +70,13 @@ fi
 echo "OK"
 
 # Check for ISO image to be available
-echo -n "Checking for Mirantis OpenStack ISO image... "
-if [ -z $iso_path ]; then
-    echo "Mirantis OpenStack image is not found. Please download it from software.mirantis.com and put under the 'iso' directory."
-    exit 1
-fi
-echo "OK"
-echo "Going to use Mirantis OpenStack ISO file $iso_path"
+#echo -n "Checking for Mirantis OpenStack ISO image... "
+#if [ -z $iso_path ]; then
+#    echo "Mirantis OpenStack image is not found. Please download it from software.mirantis.com and put under the 'iso' directory."
+#    exit 1
+#fi
+#echo "OK"
+#echo "Going to use Mirantis OpenStack ISO file $iso_path"
 
 # Check if SSH is installed. Cygwin does not install SSH by default.
 echo -n "Checking if SSH client installed... "

@@ -19,6 +19,10 @@ source ./functions/memory.sh
 # Get the first available ISO from the directory 'iso'
 iso_path=`ls -1t iso/*.iso 2>/dev/null | head -1`
 
+# This is the network interface on the host that instack's eth3 will be bridged too.
+hypervisor_bridged_nic="bond0"
+# hypervisor_bridged_nic="enp0s25"
+
 # This file will carry information about the serial ports and instack's IP addres
 vm_serial_info="${HOME}/README_vbox_console.txt"
 

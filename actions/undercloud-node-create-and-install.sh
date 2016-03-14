@@ -43,7 +43,7 @@ add_hostonly_adapter_to_vm $name 2 "${host_nic_name[1]}"
 add_hostonly_adapter_to_vm $name 3 "${host_nic_name[2]}"
 
 # Add bridged adapter to VM (replaces nic1)
-add_bridge_adapter_to_vm $name 4 "bond0"
+add_bridge_adapter_to_vm $name 4 "${hypervisor_bridged_nic}"
 
 # Add NAT adapter for internet access for all systems
 # add_nat_adapter_to_vm $name 5 $vm_master_nat_network
@@ -65,7 +65,7 @@ if [ "x${vmaddr}" != "x" ]; then
 	while [ $i -lt 120 ]
 	do
 		sleep 1s ; echo -n "."
-		temp_ip=$(arp -a|sed -e 's/://g'|grep -i ${vmaddr}|sed -e 's/.*(//' -e 's/).*//')
+		temp_ip=$(arp -an|sed -e 's/://g'|grep -i ${vmaddr}|sed -e 's/.*(//' -e 's/).*//')
 		if [ "x${temp_ip}" != "x" ]; then
 			echo "${name} is at IP: ${temp_ip}" | tee -a ${vm_serial_info}
 			vm_master_ip="${temp_ip}"
