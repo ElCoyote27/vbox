@@ -125,7 +125,8 @@ add_hostonly_adapter_to_vm() {
     echo "Adding hostonly adapter to $name and bridging with host NIC $nic..."
 
     # Add Intel PRO/1000 MT Desktop (82540EM) card to VM. The card is 1Gbps.
-    VBoxManage modifyvm $name --nic${id} hostonly --hostonlyadapter${id} "$nic" --nictype${id} 82540EM \
+    # Add Intel PRO/1000 MT Server (82545EM) card to VM. The card is 1Gbps.
+    VBoxManage modifyvm $name --nic${id} hostonly --hostonlyadapter${id} "$nic" --nictype${id} ${vm_nic_type} \
                         --cableconnected${id} on --macaddress${id} auto
     VBoxManage modifyvm  $name  --nicpromisc${id} allow-all
 }
@@ -137,7 +138,8 @@ add_nat_adapter_to_vm() {
     echo "Adding NAT adapter to $name for outbound network access through the host system..."
 
     # Add Intel PRO/1000 MT Desktop (82540EM) card to VM. The card is 1Gbps.
-    VBoxManage modifyvm $name --nic${id} nat --nictype${id} 82540EM \
+    # Add Intel PRO/1000 MT Server (82545EM) card to VM. The card is 1Gbps.
+    VBoxManage modifyvm $name --nic${id} nat --nictype${id} ${vm_nic_type} \
                         --cableconnected${id} on --macaddress${id} auto --natnet${id} "${nat_network}"
     VBoxManage modifyvm  $name  --nicpromisc${id} allow-all
     VBoxManage controlvm $name setlinkstate${id} on
@@ -150,10 +152,11 @@ add_bridge_adapter_to_vm() {
     echo "Adding Bridge adapter to $name for outbound network access through the host network..."
 
     # Add Intel PRO/1000 MT Desktop (82540EM) card to VM. The card is 1Gbps.
-    VBoxManage modifyvm $name --nic${id} bridged --nictype${id} 82540EM \
+    # Add Intel PRO/1000 MT Server (82545EM) card to VM. The card is 1Gbps.
+    VBoxManage modifyvm $name --nic${id} bridged --nictype${id} ${vm_nic_type} \
                         --cableconnected${id} on --macaddress${id} auto --bridgeadapter${id} "$nic"
     VBoxManage modifyvm  $name  --nicpromisc${id} allow-all
-#    VBoxManage controlvm $name setlinkstate${id} on
+    VBoxManage controlvm $name setlinkstate${id} on
 }
 
 add_disk_to_vm() {

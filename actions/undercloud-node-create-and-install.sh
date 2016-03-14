@@ -58,7 +58,7 @@ start_vm $name
 
 # Wait until guestOS is up
 sleep 1s
-vmaddr=$(VBoxManage showvminfo OSP-instack|grep NIC.4|sed -e 's/.*MAC: *//' -e 's/,.*//')
+vmaddr=$(VBoxManage showvminfo ${name}|grep NIC.4|sed -e 's/.*MAC: *//' -e 's/,.*//')
 if [ "x${vmaddr}" != "x" ]; then
 	echo -n "Trying to obtain IP addr for MAC ${vmaddr}..."
 	i=1 ; temp_ip=""

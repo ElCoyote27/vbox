@@ -25,6 +25,10 @@ vm_serial_info="${HOME}/README_vbox_console.txt"
 # Every Mirantis OpenStack machine name will start from this prefix
 vm_name_prefix=osp-
 
+# NIC type:
+#vm_nic_type=82540EM
+vm_nic_type=82543GC
+
 # By default, all available network interfaces vboxnet won't be removed,
 # if their IP addresses don't match with instack_master_ips (10.20.0.1 172.16.0.254
 # 172.16.1.1)
