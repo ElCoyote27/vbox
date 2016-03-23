@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#
+source ./config.sh
+source ./functions/memory.sh
+MYCONF=".config"
+source ${MYCONF}
+
 # Credentials
 if [ -f .vbox_creds ]; then
 	. .vbox_creds
@@ -9,7 +15,7 @@ fi
 
 
 # Get the SSH Key
-for i in $(seq 1 12)
+for i in $(seq 1 ${cluster_size})
 do
 	IRONIC_NODE="osp-baremetal-${i}"
 	sudo ssh  ${INSTACK} "su - stack -c \". ./stackrc ; \

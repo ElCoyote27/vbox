@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#
+source ./config.sh
+source ./functions/memory.sh
+MYCONF=".config"
+source ${MYCONF}
+
 # Credentials
 if [ -f .vbox_creds ]; then
 	. .vbox_creds
@@ -7,13 +13,14 @@ else
 	echo "NO credentials for subscription Manager found in ./.sm_creds!" ; exit 127
 fi
 
+
 # Read password:
 echo -n "Please enter password for ${VBOX_USER}@${VBOX_HOST}: "
 read -s VBOX_USER_PWD
 echo "Starting..."
 
 #
-for i in $(seq 1 12)
+for i in $(seq 1 ${cluster_size})
 do
 	IRONIC_NODE="osp-baremetal-${i}"
 
@@ -50,6 +57,16 @@ do
 	a5=$(echo ${tmpMAC}|cut -c9-10)
 	a6=$(echo ${tmpMAC}|cut -c11-12)
 	IRONIC_MAC="${a1}:${a2}:${a3}:${a4}:${a5}:${a6}"
+
+	# Update the VM's properties
+	sudo ssh ${INSTACK} "su - stack -c \" \
+		. ./stackrc ; \
+		ironic node-update ${IRONIC_UUID} add \
+		properties/cpus=${vm_slave_cpu_default} \
+		properties/memory_mb=${vm_slave_memory_default} \
+		properties/local_gb=62 \
+		properties/cpu_arch=x86_64 \
+		\""
 
 	# Create a port for the VM on the ctlplane network (NIC1)
 	sudo ssh ${INSTACK} "su - stack -c \" \

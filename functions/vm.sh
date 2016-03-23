@@ -116,6 +116,9 @@ create_vm() {
 
     # Create and attach the main hard drive
     add_disk_to_vm $name 0 $disk_mb
+
+    # Expose Memory
+    VBoxManage setextradata $vm_name "VBoxInternal/Devices/pcbios/0/Config/DmiExposeMemoryTable" "1"
 }
 
 add_hostonly_adapter_to_vm() {
@@ -180,8 +183,7 @@ add_disk_to_vm() {
 
     # Add serial numbers of disks to slave nodes
     echo "Adding serial numbers of disks to $vm_name..."
-    VBoxManage setextradata $vm_name "VBoxInternal/Devices/ahci/0/Config/Port$port/SerialNumber" "VBOX-MIRANTIS-VHD$port"
-
+    VBoxManage setextradata $vm_name "VBoxInternal/Devices/ahci/0/Config/Port$port/SerialNumber" "VBOX-OSP-VHD$port"
 }
 
 delete_vm() {

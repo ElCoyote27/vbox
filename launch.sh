@@ -42,3 +42,6 @@ esac
 
 # Create and launch slave nodes
 ./actions/baremetal-nodes-create-and-boot.sh || exit 1
+
+# Save the config..
+./actions/save_config.sh || exit 1
