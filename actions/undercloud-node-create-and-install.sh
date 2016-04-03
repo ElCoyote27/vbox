@@ -34,23 +34,27 @@ get_instack_name_ifaces
 
 name="${vm_name_prefix}instack"
 
-create_vm $name "${host_nic_name[0]}" $vm_master_cpu_cores $vm_master_memory_mb $vm_master_disk_mb
-echo
+is_vm_present $name
+if [ $? -eq 0 ]; then
+	echo "VM $name already present, skipping..."
+else
+	create_vm $name "${host_nic_name[0]}" $vm_master_cpu_cores $vm_master_memory_mb $vm_master_disk_mb
+	echo
 
-# Add additional NICs
-add_hostonly_adapter_to_vm $name 2 "${host_nic_name[1]}"
+	# Add additional NICs
+	add_hostonly_adapter_to_vm $name 2 "${host_nic_name[1]}"
 
-add_hostonly_adapter_to_vm $name 3 "${host_nic_name[2]}"
+	add_hostonly_adapter_to_vm $name 3 "${host_nic_name[2]}"
 
-# Add bridged adapter to VM (replaces nic1)
-add_bridge_adapter_to_vm $name 4 "${hypervisor_bridged_nic}"
+	# Add bridged adapter to VM (replaces nic1)
+	add_bridge_adapter_to_vm $name 4 "${hypervisor_bridged_nic}"
 
-# Add NAT adapter for internet access for all systems
-# add_nat_adapter_to_vm $name 5 $vm_master_nat_network
+	# Add NAT adapter for internet access for all systems
+	# add_nat_adapter_to_vm $name 5 $vm_master_nat_network
 
-
-# Mount ISO with installer
-# mount_iso_to_vm $name $iso_path
+	# Mount ISO with installer
+	# mount_iso_to_vm $name $iso_path
+fi
 
 # Start virtual machine with the master node
 echo

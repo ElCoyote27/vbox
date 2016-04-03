@@ -43,11 +43,11 @@ rm_network=0
 
 # Please add the IPs accordingly if you going to create non-default NICs number
 # 10.20.0.1/24   - ctlplane
-# 172.16.0.1/24  - OpenStack Public/External/Floating network
-# 172.16.1.1/24  - OpenStack Fixed/Internal/Private network
+# 10.16.0.1/24  - OpenStack Public/External/Floating network
+# 10.16.1.1/24  - OpenStack Fixed/Internal/Private network
 # 192.168.0.1/24 - OpenStack Management network
 # 192.168.1.1/24 - OpenStack Storage network (for Ceph, Swift etc)
-instack_master_ips="10.20.0.1 172.16.0.254 172.16.1.1"
+instack_master_ips="10.20.0.1 10.16.0.1 10.16.1.1"
 
 # Network mask for instack interfaces
 mask="255.255.255.0"
@@ -111,7 +111,7 @@ vm_master_prompt='root@instack ~]#'
 #   - for minimal non-HA with Cinder installation, specify 3 (1 ctrl + 1 compute + 1 cinder)
 #   - for minimal HA installation, specify 4 (3 controllers + 1 compute)
 if [ "$CONFIG_FOR" = "64GB" ]; then
-  cluster_size=12
+  cluster_size=16
 elif [ "$CONFIG_FOR" = "16GB" ]; then
   cluster_size=5
 elif [ "$CONFIG_FOR" = "8GB" ]; then
@@ -166,18 +166,16 @@ fi
 # For dedicated Cinder, 768Mb is OK, but Ceph needs 1Gb minimum
 
 if [ "$CONFIG_FOR" = "64GB" ]; then
-  vm_slave_memory_default=4096
+  vm_slave_memory_default=5120
 
-  vm_slave_memory_mb[1]=4096
-  vm_slave_memory_mb[2]=4096
-  vm_slave_memory_mb[3]=4096
-  vm_slave_memory_mb[4]=4096
-  vm_slave_memory_mb[5]=4096
-  vm_slave_memory_mb[6]=4096
-  vm_slave_memory_mb[7]=4096
-  vm_slave_memory_mb[8]=4096
-  vm_slave_memory_mb[9]=4096
-  vm_slave_memory_mb[10]=4096
+  vm_slave_memory_mb[1]=8192
+  vm_slave_memory_mb[2]=8192
+  vm_slave_memory_mb[3]=8192
+  vm_slave_memory_mb[4]=5120
+  vm_slave_memory_mb[5]=5120
+  vm_slave_memory_mb[6]=5120
+  vm_slave_memory_mb[7]=5120
+  vm_slave_memory_mb[8]=5120
 elif [ "$CONFIG_FOR" = "16GB" ]; then
   vm_slave_memory_default=1536
 

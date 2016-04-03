@@ -227,6 +227,19 @@ delete_vms_multiple() {
     done
 }
 
+delete_slave_vms_multiple() {
+    name_prefix=$1
+    list=$(get_vms_present|sed -e "s@${name_prefix}instack@@")
+
+    # Loop over the list of VMs and delete them, if its name matches the given refix
+    for name in $list; do
+        if [[ $name == $name_prefix* ]]; then
+            echo "Found existing VM: $name. Deleting it..."
+            delete_vm $name
+        fi
+    done
+}
+
 stop_vm() {
     name=$1
     vm_base_path=$(get_vm_base_path)

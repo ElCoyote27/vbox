@@ -1,0 +1,39 @@
+#!/bin/bash
+VBOX_CMD=/usr/bin/VBoxManage
+LOG_FILE=/var/tmp/VBoxManageWrapper.log
+
+#
+loop=0
+max_loop=5
+
+echo "Received ($(date +%s)): ${VBOX_CMD} $@ " >> /var/tmp/VBoxManageWrapper.log
+
+case $1 in
+	'startvm'|'controlvm')
+		VARGS="$@ --type headless"
+		;;
+	'modifyvm')
+		VM_NAME=$2
+		/usr/bin/VBoxManageWrapper controlvm ${VM_NAME} poweroff
+		VARGS="$@"
+		;;
+	*)
+		VARGS="$@"
+		;;
+esac
+
+
+while [ $loop -lt $max_loop ];
+do
+	echo "Executing ($(date +%s)): ${VBOX_CMD} ${VARGS} " >> /var/tmp/VBoxManageWrapper.log
+	${VBOX_CMD} ${VARGS}
+	RET=$?
+	echo "Got return $RET from: ${VBOX_CMD} ${VARGS}" >> /var/tmp/VBoxManageWrapper.log
+	if [ $RET -eq 0 ]; then
+		break
+	else
+		loop=$((loop + 1))
+		echo "Retrying ${loop}/${max_loop} ($(date +%s))..." >> /var/tmp/VBoxManageWrapper.log
+		sleep 1
+	fi
+done
