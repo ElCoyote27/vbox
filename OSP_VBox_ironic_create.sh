@@ -58,6 +58,16 @@ do
 	a6=$(echo ${tmpMAC}|cut -c11-12)
 	IRONIC_MAC="${a1}:${a2}:${a3}:${a4}:${a5}:${a6}"
 
+	# Update the VM's properties
+	sudo ssh ${INSTACK} "su - stack -c \" \
+		. ./stackrc ; \
+		ironic node-update ${IRONIC_UUID} add \
+		properties/cpus=${vm_slave_cpu_default} \
+		properties/memory_mb=${vm_slave_memory_default} \
+		properties/local_gb=62 \
+		properties/cpu_arch=x86_64 \
+		\""
+
 	case ${IRONIC_NODE} in
 		osp-baremetal-[123])
 			NODE_PROFILE="control"
@@ -68,29 +78,19 @@ do
 		osp-baremetal-9|osp-baremetal-10)
 			NODE_PROFILE="swift-storage"
 			;;
-		*)
+		osp-baremetal-1[123])
 			NODE_PROFILE="compute"
+			;;
+		*)
+			NODE_PROFILE=""
 			;;
 	esac
 	
 	# Update the VM's properties
-	if [ "x${NODE_PROFILE}" = "x" ]; then
+	if [ "x${NODE_PROFILE}" != "x" ]; then
 		sudo ssh ${INSTACK} "su - stack -c \" \
 			. ./stackrc ; \
 			ironic node-update ${IRONIC_UUID} add \
-			properties/cpus=${vm_slave_cpu_default} \
-			properties/memory_mb=${vm_slave_memory_default} \
-			properties/local_gb=62 \
-			properties/cpu_arch=x86_64 \
-			\""
-	else
-		sudo ssh ${INSTACK} "su - stack -c \" \
-			. ./stackrc ; \
-			ironic node-update ${IRONIC_UUID} add \
-			properties/cpus=${vm_slave_cpu_default} \
-			properties/memory_mb=${vm_slave_memory_default} \
-			properties/local_gb=62 \
-			properties/cpu_arch=x86_64 \
 			properties/capabilities=profile:${NODE_PROFILE},boot_option:local \
 			\""
 	fi

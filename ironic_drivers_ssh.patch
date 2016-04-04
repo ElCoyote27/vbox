@@ -1,0 +1,19 @@
+*** /lib/python2.7/site-packages/ironic/drivers/modules/ssh.py.orig	Fri Dec  4 16:39:19 2015
+--- /lib/python2.7/site-packages/ironic/drivers/modules/ssh.py	Thu Mar 24 12:35:13 2016
+***************
+*** 127,133 ****
+      if virt_type == 'vbox':
+          return {
+!             'base_cmd': 'LC_ALL=C /usr/bin/VBoxManage',
+!             'start_cmd': 'startvm {_NodeName_}',
+              'stop_cmd': 'controlvm {_NodeName_} poweroff',
+              'reboot_cmd': 'controlvm {_NodeName_} reset',
+              'list_all': "list vms|awk -F'\"' '{print $2}'",
+--- 127,133 ----
+      if virt_type == 'vbox':
+          return {
+!             'base_cmd': 'LC_ALL=C /usr/bin/VBoxManageWrapper',
+!             'start_cmd': 'startvm {_NodeName_}',
+              'stop_cmd': 'controlvm {_NodeName_} poweroff',
+              'reboot_cmd': 'controlvm {_NodeName_} reset',
+              'list_all': "list vms|awk -F'\"' '{print $2}'",
