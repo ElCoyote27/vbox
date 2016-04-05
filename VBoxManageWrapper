@@ -1,12 +1,14 @@
 #!/bin/bash
+# Install as /usr/bin/VBoxManageWrapper
+
 VBOX_CMD=/usr/bin/VBoxManage
-LOG_FILE=/var/tmp/VBoxManageWrapper.log
+LOG_FILE=/var/log/VBoxManageWrapper.log
 
 #
 loop=0
 max_loop=5
 
-echo "Received ($(date +%s)): ${VBOX_CMD} $@ " >> /var/tmp/VBoxManageWrapper.log
+echo "Received ($(date +%Y%m%d%H%M)): ${VBOX_CMD} $@ " >> ${LOG_FILE}
 
 case $1 in
 	'startvm'|'controlvm')
@@ -25,15 +27,15 @@ esac
 
 while [ $loop -lt $max_loop ];
 do
-	echo "Executing ($(date +%s)): ${VBOX_CMD} ${VARGS} " >> /var/tmp/VBoxManageWrapper.log
+	echo "Executing ($(date +%Y%m%d%H%M)): ${VBOX_CMD} ${VARGS} " >> ${LOG_FILE}
 	${VBOX_CMD} ${VARGS}
 	RET=$?
-	echo "Got return $RET from: ${VBOX_CMD} ${VARGS}" >> /var/tmp/VBoxManageWrapper.log
+	echo "Got rc=${RET} ($(date +%Y%m%d%H%M)) from: ${VBOX_CMD} ${VARGS}" >> ${LOG_FILE}
 	if [ $RET -eq 0 ]; then
 		break
 	else
 		loop=$((loop + 1))
-		echo "Retrying ${loop}/${max_loop} ($(date +%s))..." >> /var/tmp/VBoxManageWrapper.log
+		echo "Retrying ${loop}/${max_loop} ($(date +%Y%m%d%H%M))..." >> ${LOG_FILE}
 		sleep 1
 	fi
 done
