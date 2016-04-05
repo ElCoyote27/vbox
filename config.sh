@@ -110,8 +110,10 @@ vm_master_prompt='root@instack ~]#'
 #   - for minimal non-HA installation, specify 2 (1 controller + 1 compute)
 #   - for minimal non-HA with Cinder installation, specify 3 (1 ctrl + 1 compute + 1 cinder)
 #   - for minimal HA installation, specify 4 (3 controllers + 1 compute)
-if [ "$CONFIG_FOR" = "64GB" ]; then
+if [ "$CONFIG_FOR" = "128GB" ]; then
   cluster_size=16
+elif [ "$CONFIG_FOR" = "64GB" ]; then
+  cluster_size=8
 elif [ "$CONFIG_FOR" = "16GB" ]; then
   cluster_size=5
 elif [ "$CONFIG_FOR" = "8GB" ]; then
@@ -125,7 +127,13 @@ fi
 
 # You can specify CPU count for your nodes as you wish, but keep in mind resources of your machine.
 # If you don't, then will be used default parameter
-if [ "$CONFIG_FOR" = "64GB" ]; then
+if [ "$CONFIG_FOR" = "128GB" ]; then
+  vm_slave_cpu_default=2
+
+  vm_slave_cpu[1]=4
+  vm_slave_cpu[2]=4
+  vm_slave_cpu[3]=4
+elif [ "$CONFIG_FOR" = "64GB" ]; then
   vm_slave_cpu_default=2
 
   vm_slave_cpu[1]=4
@@ -165,17 +173,28 @@ fi
 # For compute node 1GB is recommended, otherwise VM instances in OpenStack may not boot
 # For dedicated Cinder, 768Mb is OK, but Ceph needs 1Gb minimum
 
-if [ "$CONFIG_FOR" = "64GB" ]; then
-  vm_slave_memory_default=5120
+if [ "$CONFIG_FOR" = "128GB" ]; then
+  vm_slave_memory_default=4128
 
   vm_slave_memory_mb[1]=8192
   vm_slave_memory_mb[2]=8192
   vm_slave_memory_mb[3]=8192
-  vm_slave_memory_mb[4]=5120
-  vm_slave_memory_mb[5]=5120
-  vm_slave_memory_mb[6]=5120
-  vm_slave_memory_mb[7]=5120
-  vm_slave_memory_mb[8]=5120
+  vm_slave_memory_mb[4]=4128
+  vm_slave_memory_mb[5]=4128
+  vm_slave_memory_mb[6]=4128
+  vm_slave_memory_mb[7]=4128
+  vm_slave_memory_mb[8]=4128
+elif [ "$CONFIG_FOR" = "64GB" ]; then
+  vm_slave_memory_default=4128
+
+  vm_slave_memory_mb[1]=8192
+  vm_slave_memory_mb[2]=8192
+  vm_slave_memory_mb[3]=8192
+  vm_slave_memory_mb[4]=4128
+  vm_slave_memory_mb[5]=4128
+  vm_slave_memory_mb[6]=4128
+  vm_slave_memory_mb[7]=4128
+  vm_slave_memory_mb[8]=4128
 elif [ "$CONFIG_FOR" = "16GB" ]; then
   vm_slave_memory_default=1536
 
