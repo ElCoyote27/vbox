@@ -1,23 +1,32 @@
 #!/bin/bash
-
 #
+# Requirements: This script must be capable of:
+# sudo ssh ${INSTACK} -l root
+#   and:
+# sudo ssh ${INSTACK} -l root "su - stack -c 'ssh ${VBOX_HOST_IP} -l ${VBOX_USER} VBoxManage'"
+#
+
+# Initial setup
 source ./config.sh
 source ./functions/memory.sh
 MYCONF=".config"
 source ${MYCONF}
+IRONIC_KEY="/home/stack/.ssh/ironic_key"
 
 # Credentials
 if [ -f .vbox_creds ]; then
 	. .vbox_creds
 else
-	echo "NO credentials for subscription Manager found in ./.sm_creds!" ; exit 127
+	echo "NO credentials for VBOX Manager found in ./.sm_creds!" ; exit 127
 fi
 
-
-# Read password:
-echo -n "Please enter password for ${VBOX_USER}@${VBOX_HOST}: "
-read -s VBOX_USER_PWD
-echo "Starting..."
+# Read the SSH priv key and copy it to the Instack machine..
+if [ -f ${VBOX_SSH_KEY_FILE} ]; then
+	sudo scp -p ${VBOX_SSH_KEY_FILE} ${INSTACK}:${IRONIC_KEY}
+	sudo ssh ${INSTACK} chown stack ${IRONIC_KEY}
+else
+	echo "Unable to locate SSH private key at ${VBOX_SSH_KEY_FILE} on $(uname -n)" ; exit 127
+fi
 
 #
 for i in $(seq 1 ${cluster_size})
@@ -26,18 +35,18 @@ do
 
 	# Create ironic node..
 	sudo ssh ${INSTACK} "su - stack -c \" \
-		. ./stackrc ; \
-		ironic node-create -n ${IRONIC_NODE} \
+		. ./stackrc ; ironic node-create -n ${IRONIC_NODE} \
 		-d pxe_ssh \
 		-i ssh_address=${VBOX_HOST_IP} \
 		-i ssh_username=${VBOX_USER} \
 		-i ssh_virt_type=vbox \
-		-i ssh_password=\"${VBOX_USER_PWD}\" \
+		-i ssh_key_contents=\\\"\\\$(cat ${IRONIC_KEY} ) \\\" \
 		\""
 
 		##### These do not work yet (20160310)
-		##### -i ssh_key_contents=\"${VBOX_USER_KEY}\" \
-		##### -i ssh_key_filename=\"${SSH_KEY_FILE}\" \
+		##### -i ssh_key_filename=/home/stack/ironic_rsa \
+		##### This one works but haem.... YMV (20160310)
+		##### -i ssh_password=\"${VBOX_USER_PWD}\" \
 
 	# Find the UUID from the ironic node creatd previously
 	IRONIC_UUID=$(sudo ssh ${INSTACK} "su - stack -c \" \
