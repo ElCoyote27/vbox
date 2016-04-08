@@ -57,9 +57,9 @@ mask="255.255.255.0"
     Linux)
       os_type="linux"
       if [ "$(nproc)" -gt "1" ]; then
-        vm_master_cpu_cores=4
+        vm_master_cpu_cores=8
       else
-        vm_master_cpu_cores=1
+        vm_master_cpu_cores=4
       fi
     ;;
     Darwin)

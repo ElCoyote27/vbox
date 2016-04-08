@@ -81,13 +81,13 @@ do
 		osp-baremetal-[123])
 			NODE_PROFILE="control"
 			;;
-		osp-baremetal-[45678])
+		osp-baremetal-[456789])
 			NODE_PROFILE="ceph-storage"
 			;;
-		osp-baremetal-9|osp-baremetal-10)
+		osp-baremetal-1[012])
 			NODE_PROFILE="swift-storage"
 			;;
-		osp-baremetal-1[123])
+		osp-baremetal-1[345])
 			NODE_PROFILE="compute"
 			;;
 		*)
