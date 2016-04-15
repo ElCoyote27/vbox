@@ -91,7 +91,7 @@ do
 			NODE_PROFILE="compute"
 			;;
 		*)
-			NODE_PROFILE=""
+			NODE_PROFILE="compute"
 			;;
 	esac
 	
@@ -117,3 +117,9 @@ do
 		\""
 
 done
+
+# Last steps:
+
+sudo ssh ${INSTACK} "su - stack -c \". ./stackrc ; openstack baremetal configure boot ; openstack baremetal show capabilities\""
+
+echo "Please remember to: \"openstack baremetal introspection bulk start\" "

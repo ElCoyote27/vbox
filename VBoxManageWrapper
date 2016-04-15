@@ -2,7 +2,7 @@
 # Install as /usr/bin/VBoxManageWrapper
 
 VBOX_CMD=/usr/bin/VBoxManage
-LOG_FILE=/var/log/VBoxManageWrapper.log
+LOG_FILE=/var/tmp/VBoxManageWrapper.log
 
 #
 loop=0
