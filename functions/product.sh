@@ -14,8 +14,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-# This file contains the functions for connecting to Fuel VM, checking if the installation process completed
-# and Fuel became operational, and also enabling outbound network/internet access for this VM through the
+# This file contains the functions for connecting to Undercloud VM, checking if the installation process completed
+# and OSP-D became operational, and also enabling outbound network/internet access for this VM through the
 # host system
 
 ssh_options='-oConnectTimeout=5 -oStrictHostKeyChecking=no -oCheckHostIP=no -oUserKnownHostsFile=/dev/null -oRSAAuthentication=no -oPubkeyAuthentication=no'
@@ -26,7 +26,7 @@ wait_for_instack_menu() {
     password=$3
     prompt=$4
 
-    echo "Waiting for Fuel Menu so it can be skipped. Please do NOT abort the script..."
+    echo "Waiting for Undercloud so it can be skipped. Please do NOT abort the script..."
 
     # Loop until master node gets successfully installed
     maxdelay=3000
@@ -46,7 +46,7 @@ skip_instack_menu() {
     password=$3
     prompt=$4
 
-    # Log in into the VM, see if Fuel Setup is running or puppet already started
+    # Log in into the VM, see if Undercloud is running or puppet already started
     # Looks a bit ugly, but 'end of expect' has to be in the very beginning of the line
     result=$(
         expect << ENDOFEXPECT
@@ -60,7 +60,7 @@ skip_instack_menu() {
 ENDOFEXPECT
     )
     if [[ "$result" =~ "returns 0" ]]; then
-      echo "Skipping Fuel Setup..."
+      echo "Skipping Undercloud Setup..."
       expect << ENDOFEXPECT
         spawn ssh $ssh_options $username@$ip
         expect "connect to host" exit
@@ -91,7 +91,7 @@ is_product_vm_operational() {
         expect "*?assword:*"
         send "$password\r"
         expect "$prompt"
-        send "grep 'Fuel node deployment' /var/log/puppet/bootstrap_admin_node.log\r"
+        send "grep 'Undercloud node deployment' /var/log/puppet/bootstrap_admin_node.log\r"
         expect "$prompt"
         send "logout\r"
         expect "$prompt"
@@ -316,9 +316,9 @@ ENDOFEXPECT
 
 print_no_internet_connectivity_banner() {
     echo "FAIL"
-    echo "############################################################"
-    echo "# WARNING: some of the Fuel features will not be supported #"
-    echo "#          because there is no Internet connectivity       #"
-    echo "############################################################"
+    echo "#############################################################"
+    echo "# WARNING: some of the OSP-D features will not be supported #"
+    echo "#          because there is no Internet connectivity        #"
+    echo "#############################################################"
 }
 

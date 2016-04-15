@@ -69,7 +69,7 @@ if [ "x${vmaddr}" != "x" ]; then
 	while [ $i -lt 120 ]
 	do
 		sleep 1s ; echo -n "."
-		temp_ip=$(arp -an|sed -e 's/://g'|grep -i ${vmaddr}|sed -e 's/.*(//' -e 's/).*//')
+		temp_ip=$(arp -an|sed -e 's/://g'|grep -i ${vmaddr}|sed -e 's/.*(//' -e 's/).*//'|sort -un)
 		if [ "x${temp_ip}" != "x" ]; then
 			echo "${name} is at IP: ${temp_ip}" | tee -a ${vm_serial_info}
 			vm_master_ip="${temp_ip}"
@@ -86,12 +86,11 @@ fi
 #wait_for_product_vm_to_install $vm_master_ip $vm_master_username $vm_master_password "$vm_master_prompt"
 
 # Enable outbound network/internet access for the machine
-echo enable_outbound_network_for_product_vm $vm_master_ip $vm_master_username $vm_master_password "$vm_master_prompt" 3 $vm_master_nat_gateway
 enable_outbound_network_for_product_vm $vm_master_ip $vm_master_username $vm_master_password "$vm_master_prompt" 3 $vm_master_nat_gateway
 
 # Report success
 echo
 echo "Master node has been installed."
 
-#Sleep 10s to wait for Cobbler to settle
-sleep 10
+#Sleep 5s to wait for VM to settle
+sleep 5
