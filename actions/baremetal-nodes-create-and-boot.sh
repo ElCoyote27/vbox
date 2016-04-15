@@ -25,7 +25,7 @@ source ./functions/vm.sh
 source ./functions/network.sh
 
 # Get variables "host_nic_name" for the slave nodes
-get_instack_name_ifaces
+get_baremetal_name_ifaces
 
 # Create and start slave nodes
 for idx in $(eval echo {1..$cluster_size}); do
