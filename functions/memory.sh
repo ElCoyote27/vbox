@@ -19,16 +19,16 @@
 get_available_memory() {
 	local total_memory
 	case $(uname) in
-	Linux | CYGWIN*)
-	total_memory=$(LANG=C free | grep Mem | awk '{print $2}')
-;;
-Darwin)
-total_memory=$(sysctl -n hw.memsize)
-total_memory=$(( ${total_memory} / 1024 ))
-;;
-*)
-total_memory="-1"
-;;
-esac
-echo ${total_memory}
+		Linux | CYGWIN*)
+			total_memory=$(LANG=C free | grep Mem | awk '{print $2}')
+			;;
+		Darwin)
+			total_memory=$(sysctl -n hw.memsize)
+			total_memory=$(( ${total_memory} / 1024 ))
+			;;
+		*)
+			total_memory="-1"
+			;;
+	esac
+	echo ${total_memory}
 }
