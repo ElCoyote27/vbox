@@ -34,20 +34,20 @@ get_instack_name_ifaces
 
 name="${vm_name_prefix}instack"
 
-is_vm_present $name
+is_vm_present ${name}
 if [ $? -eq 0 ]; then
-	echo "VM $name already present, skipping..."
+	echo "VM ${name} already present, skipping..."
 else
-	create_vm $name "${host_nic_name[0]}" $vm_master_cpu_cores $vm_master_memory_mb $vm_master_disk_mb
+	create_vm ${name} "${host_nic_name[0]}" ${vm_master_cpu_cores} ${vm_master_memory_mb} ${vm_master_disk_mb}
 	echo
 
 	# Add additional NICs
-	add_hostonly_adapter_to_vm $name 2 "${host_nic_name[1]}"
+	add_hostonly_adapter_to_vm ${name} 2 "${host_nic_name[1]}"
 
-	add_hostonly_adapter_to_vm $name 3 "${host_nic_name[2]}"
+	add_hostonly_adapter_to_vm ${name} 3 "${host_nic_name[2]}"
 
 	# Add bridged adapter to VM (replaces nic4)
-	add_bridge_adapter_to_vm $name 4 "${hypervisor_bridged_nic}"
+	add_bridge_adapter_to_vm ${name} 4 "${hypervisor_bridged_nic}"
 
 	# Add NAT adapter for internet access for all systems
 	# add_nat_adapter_to_vm $name 5 $vm_master_nat_network
@@ -58,7 +58,7 @@ fi
 
 # Start virtual machine with the master node
 echo
-start_vm $name
+start_vm ${name}
 
 # Wait until guestOS is up
 sleep 1s
@@ -66,7 +66,7 @@ vmaddr=$(VBoxManage showvminfo ${name}|grep NIC.4|sed -e 's/.*MAC: *//' -e 's/,.
 if [ "x${vmaddr}" != "x" ]; then
 	echo -n "Trying to obtain IP addr for MAC ${vmaddr}..."
 	i=1 ; temp_ip=""
-	while [ $i -lt 120 ]
+	while [ ${i} -lt 120 ]
 	do
 		sleep 1s ; echo -n "."
 		temp_ip=$(arp -an|sed -e 's/://g'|grep -i ${vmaddr}|sed -e 's/.*(//' -e 's/).*//'|sort -un)
@@ -78,15 +78,15 @@ if [ "x${vmaddr}" != "x" ]; then
 	done
 fi
 
-if [ "$skipinstackmenu" = "yes" ]; then
-  wait_for_instack_menu $vm_master_ip $vm_master_username $vm_master_password "$vm_master_prompt"
+if [ "${skipinstackmenu}" = "yes" ]; then
+	wait_for_instack_menu ${vm_master_ip} ${vm_master_username} ${vm_master_password} "${vm_master_prompt}"
 fi
 
 # Wait until the machine gets installed and Puppet completes its run
 #wait_for_product_vm_to_install $vm_master_ip $vm_master_username $vm_master_password "$vm_master_prompt"
 
 # Enable outbound network/internet access for the machine
-enable_outbound_network_for_product_vm $vm_master_ip $vm_master_username $vm_master_password "$vm_master_prompt" 3 $vm_master_nat_gateway
+enable_outbound_network_for_product_vm ${vm_master_ip} ${vm_master_username} ${vm_master_password} "${vm_master_prompt}" 3 ${vm_master_nat_gateway}
 
 # Report success
 echo

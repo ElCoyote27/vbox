@@ -26,13 +26,13 @@ source ./functions/vm.sh
 source ./functions/network.sh
 
 # Delete host-only interfaces
-if [[ "$rm_network" == "0" ]]; then
-    delete_instack_ifaces
+if [[ "${rm_network}" == "0" ]]; then
+	delete_instack_ifaces
 else
-    delete_all_hostonly_interfaces
+	delete_all_hostonly_interfaces
 fi
 
 # Create the required host-only interfaces
-for ip in $instack_master_ips; do
-    create_hostonly_interfaces $ip
+for ip in ${instack_master_ips}; do
+	create_hostonly_interfaces ${ip}
 done

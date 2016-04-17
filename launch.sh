@@ -16,13 +16,13 @@
 
 # Add VirtualBox directory to PATH
 case "$(uname)" in
-    CYGWIN*)
-        vbox_path_registry=`cat /proc/registry/HKEY_LOCAL_MACHINE/SOFTWARE/Oracle/VirtualBox/InstallDir`
-        vbox_path=`cygpath "$vbox_path_registry"| sed -e 's%/$%%'`
-        export PATH=$PATH:$vbox_path
-      ;;
-    *)
-      ;;
+CYGWIN*)
+vbox_path_registry=`cat /proc/registry/HKEY_LOCAL_MACHINE/SOFTWARE/Oracle/VirtualBox/InstallDir`
+vbox_path=`cygpath "${vbox_path_registry}"| sed -e 's%/$%%'`
+export PATH=${PATH}:${vbox_path}
+;;
+*)
+;;
 esac
 
 # Prepare the host system

@@ -25,4 +25,4 @@ source ./functions/vm.sh
 source ./functions/network.sh
 
 # Start all VMs from the previous Mirantis OpenStack installation
-start_vms_multiple $vm_name_prefix
+start_vms_multiple ${vm_name_prefix}

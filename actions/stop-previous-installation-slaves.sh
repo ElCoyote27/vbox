@@ -25,4 +25,4 @@ source ./functions/vm.sh
 source ./functions/network.sh
 
 # Stop all VMs from the previous Mirantis OpenStack installation
-stop_slave_vms_multiple $vm_name_prefix
+stop_slave_vms_multiple ${vm_name_prefix}

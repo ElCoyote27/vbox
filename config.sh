@@ -53,37 +53,37 @@ instack_master_ips="10.20.0.1 10.16.0.1 10.16.1.1"
 mask="255.255.255.0"
 
 # Determining the type of operating system and adding CPU core to the master node
-  case "$(uname)" in
-    Linux)
-      os_type="linux"
-      if [ "$(nproc)" -gt "1" ]; then
-        vm_master_cpu_cores=4
-      else
-        vm_master_cpu_cores=2
-      fi
-    ;;
-    Darwin)
-      os_type="darwin"
-      mac_nproc=`sysctl -a | grep machdep.cpu.thread_count | sed 's/^machdep.cpu.thread_count\:[ \t]*//'`
-      if [ "$mac_nproc" -gt "1" ]; then
-        vm_master_cpu_cores=2
-      else
-        vm_master_cpu_cores=1
-      fi
-    ;;
-    CYGWIN*)
-      os_type="cygwin"
-      if [ "$(nproc)" -gt "1" ]; then
-        vm_master_cpu_cores=2
-      else
-        vm_master_cpu_cores=1
-      fi
-    ;;
-    *)
-      echo "$(uname) is not supported operating system."
-      exit 1
-    ;;
-  esac
+case "$(uname)" in
+Linux)
+os_type="linux"
+if [ "$(nproc)" -gt "1" ]; then
+	vm_master_cpu_cores=4
+else
+	vm_master_cpu_cores=2
+fi
+;;
+Darwin)
+os_type="darwin"
+mac_nproc=`sysctl -a | grep machdep.cpu.thread_count | sed 's/^machdep.cpu.thread_count\:[ \t]*//'`
+if [ "${mac_nproc}" -gt "1" ]; then
+vm_master_cpu_cores=2
+else
+vm_master_cpu_cores=1
+fi
+;;
+CYGWIN*)
+os_type="cygwin"
+if [ "$(nproc)" -gt "1" ]; then
+vm_master_cpu_cores=2
+else
+vm_master_cpu_cores=1
+fi
+;;
+*)
+echo "$(uname) is not supported operating system."
+exit 1
+;;
+esac
 
 # Master node settings
 vm_master_memory_mb=16384
@@ -110,54 +110,54 @@ vm_master_prompt='root@instack ~]#'
 #   - for minimal non-HA installation, specify 2 (1 controller + 1 compute)
 #   - for minimal non-HA with Cinder installation, specify 3 (1 ctrl + 1 compute + 1 cinder)
 #   - for minimal HA installation, specify 4 (3 controllers + 1 compute)
-if [ "$CONFIG_FOR" = "128GB" ]; then
-  cluster_size=16
-elif [ "$CONFIG_FOR" = "64GB" ]; then
-  cluster_size=8
-elif [ "$CONFIG_FOR" = "16GB" ]; then
-  cluster_size=5
-elif [ "$CONFIG_FOR" = "8GB" ]; then
-  cluster_size=3
+if [ "${CONFIG_FOR}" = "128GB" ]; then
+cluster_size=16
+elif [ "${CONFIG_FOR}" = "64GB" ]; then
+cluster_size=8
+elif [ "${CONFIG_FOR}" = "16GB" ]; then
+cluster_size=5
+elif [ "${CONFIG_FOR}" = "8GB" ]; then
+cluster_size=3
 else
-  # Section for custom configuration
-  cluster_size=1
+# Section for custom configuration
+cluster_size=1
 fi
 
 # Slave node settings. This section allows you to define CPU count for each slave node.
 
 # You can specify CPU count for your nodes as you wish, but keep in mind resources of your machine.
 # If you don't, then will be used default parameter
-if [ "$CONFIG_FOR" = "128GB" ]; then
-  vm_slave_cpu_default=2
+if [ "${CONFIG_FOR}" = "128GB" ]; then
+vm_slave_cpu_default=2
 
-  vm_slave_cpu[1]=4
-  vm_slave_cpu[2]=4
-  vm_slave_cpu[3]=4
-elif [ "$CONFIG_FOR" = "64GB" ]; then
-  vm_slave_cpu_default=2
+vm_slave_cpu[1]=4
+vm_slave_cpu[2]=4
+vm_slave_cpu[3]=4
+elif [ "${CONFIG_FOR}" = "64GB" ]; then
+vm_slave_cpu_default=2
 
-  vm_slave_cpu[1]=4
-  vm_slave_cpu[2]=4
-  vm_slave_cpu[3]=4
-elif [ "$CONFIG_FOR" = "16GB" ]; then
-  vm_slave_cpu_default=1
+vm_slave_cpu[1]=4
+vm_slave_cpu[2]=4
+vm_slave_cpu[3]=4
+elif [ "${CONFIG_FOR}" = "16GB" ]; then
+vm_slave_cpu_default=1
 
-  vm_slave_cpu[1]=1
-  vm_slave_cpu[2]=1
-  vm_slave_cpu[3]=1
-  vm_slave_cpu[4]=1
-  vm_slave_cpu[5]=1
-elif [ "$CONFIG_FOR" = "8GB" ]; then
-  vm_slave_cpu_default=1
+vm_slave_cpu[1]=1
+vm_slave_cpu[2]=1
+vm_slave_cpu[3]=1
+vm_slave_cpu[4]=1
+vm_slave_cpu[5]=1
+elif [ "${CONFIG_FOR}" = "8GB" ]; then
+vm_slave_cpu_default=1
 
-  vm_slave_cpu[1]=1
-  vm_slave_cpu[2]=1
-  vm_slave_cpu[3]=1
+vm_slave_cpu[1]=1
+vm_slave_cpu[2]=1
+vm_slave_cpu[3]=1
 else
-  # Section for custom configuration
-  vm_slave_cpu_default=1
+# Section for custom configuration
+vm_slave_cpu_default=1
 
-  vm_slave_cpu[1]=1
+vm_slave_cpu[1]=1
 fi
 
 # This section allows you to define RAM size in MB for each slave node.
@@ -173,47 +173,47 @@ fi
 # For compute node 1GB is recommended, otherwise VM instances in OpenStack may not boot
 # For dedicated Cinder, 768Mb is OK, but Ceph needs 1Gb minimum
 
-if [ "$CONFIG_FOR" = "128GB" ]; then
-  vm_slave_memory_default=4128
+if [ "${CONFIG_FOR}" = "128GB" ]; then
+vm_slave_memory_default=4128
 
-  vm_slave_memory_mb[1]=8192
-  vm_slave_memory_mb[2]=8192
-  vm_slave_memory_mb[3]=8192
-  vm_slave_memory_mb[4]=4128
-  vm_slave_memory_mb[5]=4128
-  vm_slave_memory_mb[6]=4128
-  vm_slave_memory_mb[7]=4128
-  vm_slave_memory_mb[8]=4128
-elif [ "$CONFIG_FOR" = "64GB" ]; then
-  vm_slave_memory_default=4128
+vm_slave_memory_mb[1]=8192
+vm_slave_memory_mb[2]=8192
+vm_slave_memory_mb[3]=8192
+vm_slave_memory_mb[4]=4128
+vm_slave_memory_mb[5]=4128
+vm_slave_memory_mb[6]=4128
+vm_slave_memory_mb[7]=4128
+vm_slave_memory_mb[8]=4128
+elif [ "${CONFIG_FOR}" = "64GB" ]; then
+vm_slave_memory_default=4128
 
-  vm_slave_memory_mb[1]=8192
-  vm_slave_memory_mb[2]=8192
-  vm_slave_memory_mb[3]=8192
-  vm_slave_memory_mb[4]=4128
-  vm_slave_memory_mb[5]=4128
-  vm_slave_memory_mb[6]=4128
-  vm_slave_memory_mb[7]=4128
-  vm_slave_memory_mb[8]=4128
-elif [ "$CONFIG_FOR" = "16GB" ]; then
-  vm_slave_memory_default=1536
+vm_slave_memory_mb[1]=8192
+vm_slave_memory_mb[2]=8192
+vm_slave_memory_mb[3]=8192
+vm_slave_memory_mb[4]=4128
+vm_slave_memory_mb[5]=4128
+vm_slave_memory_mb[6]=4128
+vm_slave_memory_mb[7]=4128
+vm_slave_memory_mb[8]=4128
+elif [ "${CONFIG_FOR}" = "16GB" ]; then
+vm_slave_memory_default=1536
 
-  vm_slave_memory_mb[1]=2048
-  vm_slave_memory_mb[2]=2048
-  vm_slave_memory_mb[3]=2048
-  vm_slave_memory_mb[4]=2048
-  vm_slave_memory_mb[5]=2048
-elif [ "$CONFIG_FOR" = "8GB" ]; then
-  vm_slave_memory_default=1024
+vm_slave_memory_mb[1]=2048
+vm_slave_memory_mb[2]=2048
+vm_slave_memory_mb[3]=2048
+vm_slave_memory_mb[4]=2048
+vm_slave_memory_mb[5]=2048
+elif [ "${CONFIG_FOR}" = "8GB" ]; then
+vm_slave_memory_default=1024
 
-  vm_slave_memory_mb[1]=1536
-  vm_slave_memory_mb[2]=1536
-  vm_slave_memory_mb[3]=1536
+vm_slave_memory_mb[1]=1536
+vm_slave_memory_mb[2]=1536
+vm_slave_memory_mb[3]=1536
 else
-  # Section for custom configuration
-  vm_slave_memory_default=1024
+# Section for custom configuration
+vm_slave_memory_default=1024
 
-  vm_slave_memory_mb[1]=2048
+vm_slave_memory_mb[1]=2048
 fi
 
 # Within demo cluster created by this script, all slaves (controller
