@@ -54,14 +54,22 @@ get_baremetal_name_ifaces() {
   set -- $instack_ifaces
   j=0
   for i in $instack_ifaces; do
-    host_nic_name[$j]=$i
-    j=$((j+1));
-    if [ $j -eq 2 ]; then
+    case $j in
+      0)
+        host_nic_name[$j]=$i
+        j=$((j+1));
+        ;;
+      1)
       # Do it one more time here.. so both nic1 and nic2 are set to vboxnet1.
       # nic0 will remain vboxnet0 and nic3 will be vboxnet2
-      host_nic_name[$j]=$i
-      j=$((j+1));
-    fi
+        host_nic_name[$j]=$i
+        j=$((j+1));
+        host_nic_name[$j]=$i
+        j=$((j+1));
+        ;;
+      *)
+        ;;
+    esac
   done
   unset IFS
 }

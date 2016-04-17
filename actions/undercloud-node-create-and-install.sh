@@ -46,7 +46,7 @@ else
 
 	add_hostonly_adapter_to_vm $name 3 "${host_nic_name[2]}"
 
-	# Add bridged adapter to VM (replaces nic1)
+	# Add bridged adapter to VM (replaces nic4)
 	add_bridge_adapter_to_vm $name 4 "${hypervisor_bridged_nic}"
 
 	# Add NAT adapter for internet access for all systems

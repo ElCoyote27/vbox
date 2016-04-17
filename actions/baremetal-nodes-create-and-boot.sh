@@ -44,6 +44,10 @@ for idx in $(eval echo {1..$cluster_size}); do
       add_hostonly_adapter_to_vm $name $((nic+1)) "${host_nic_name[${nic}]}"
     done
   fi
+
+	# Add bridged adapter to VM (replaces nic4)
+	# add_bridge_adapter_to_vm $name $((${#host_nic_name[*]})) "${hypervisor_bridged_nic}"
+
   # Add additional disks to VM
   echo
   add_disk_to_vm $name 1 $vm_slave_second_disk_mb
