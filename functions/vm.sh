@@ -97,15 +97,18 @@ create_vm() {
 	VBoxManage modifyvm ${name} --rtcuseutc on --memory ${memory_mb} --cpus ${cpu_cores} --vram 64
 
 	# Enable Page Fusion
-	VBoxManage modifyvm ${name} --pagefusion on
+	VBoxManage modifyvm ${name} --pagefusion off --nestedpaging on --vtxvpid on --largepages on
+
+	# Set Paravirtualization driver..
+	VBoxManage modifyvm ${name} --paravirtprovider kvm
 
 	# Configure main network interface for management/PXE network
 	add_hostonly_adapter_to_vm ${name} 1 "${nic}"
 	VBoxManage modifyvm ${name} --boot1 disk --boot2 dvd --boot3 net --boot4 none
 
 	# Configure storage controllers
-	VBoxManage storagectl ${name} --name 'IDE' --add ide --hostiocache on
-	VBoxManage storagectl ${name} --name 'SATA' --add sata --hostiocache on
+	VBoxManage storagectl ${name} --name 'IDE' --add ide --hostiocache on --controller ICH6
+	VBoxManage storagectl ${name} --name 'SATA' --add sata --hostiocache on --controller IntelAHCI --portcount 16
 
 	# Add first serial port (All VMs)
 	VBoxManage modifyvm ${name} --uart1 0x3F8 4

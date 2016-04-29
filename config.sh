@@ -31,6 +31,8 @@ vm_name_prefix=osp-
 
 # NIC type:
 vm_nic_type=82540EM
+#vm_nic_type=82545EM
+#vm_nic_type=82543GC
 
 # By default, all available network interfaces vboxnet won't be removed,
 # if their IP addresses don't match with instack_master_ips (10.20.0.1 172.16.0.254
@@ -38,7 +40,7 @@ vm_nic_type=82540EM
 # If you want to remove all existing vbox interfaces, then use rm_network=1
 # 0 - don't remove all vbox networks. Remove only instack networks if they exist
 # 1 - remove all vbox networks
-rm_network=0
+rm_network=1
 
 # Please add the IPs accordingly if you going to create non-default NICs number
 # 10.20.0.1/24   - ctlplane
@@ -56,7 +58,7 @@ case "$(uname)" in
 	Linux)
 		os_type="linux"
 		if [ "$(nproc)" -gt "2" ]; then
-			vm_master_cpu_cores=8
+			vm_master_cpu_cores=4
 		else
 			vm_master_cpu_cores=2
 		fi
@@ -223,8 +225,8 @@ fi
 # depending on the roles applied to the server.
 # Nodes with combined roles may require more disk space.
 vm_slave_first_disk_mb=65535
-vm_slave_second_disk_mb=65535
-vm_slave_third_disk_mb=65535
+vm_slave_second_disk_mb=4194304
+vm_slave_third_disk_mb=4194304
 
 # Set to 1 to run VirtualBox in headless mode
 headless=1

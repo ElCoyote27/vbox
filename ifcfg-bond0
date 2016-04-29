@@ -1,0 +1,5 @@
+DEVICE=bond0
+TYPE=Bond
+NM_CONTROLLED=no
+BONDING_OPTS="mode=active-backup miimon=200"
+IPV6INIT=no

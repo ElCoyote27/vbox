@@ -51,12 +51,19 @@ for idx in $(eval echo {1..${cluster_size}}); do
 	# Add additional disks to VM
 	echo
 	add_disk_to_vm ${name} 1 ${vm_slave_second_disk_mb}
+	sleep 0.1
 	add_disk_to_vm ${name} 2 ${vm_slave_third_disk_mb}
+	sleep 0.1
 	add_disk_to_vm ${name} 3 ${vm_slave_third_disk_mb}
+	sleep 0.1
 	add_disk_to_vm ${name} 4 ${vm_slave_third_disk_mb}
+	sleep 0.1
 	add_disk_to_vm ${name} 5 ${vm_slave_third_disk_mb}
+	sleep 0.1
 	add_disk_to_vm ${name} 6 ${vm_slave_third_disk_mb}
+	sleep 0.1
 	add_disk_to_vm ${name} 7 ${vm_slave_third_disk_mb}
+	sleep 0.1
 
 	enable_network_boot_for_vm ${name}
 
