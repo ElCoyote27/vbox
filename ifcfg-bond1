@@ -2,3 +2,5 @@ DEVICE=bond1
 TYPE=Bond
 NM_CONTROLLED=no
 BONDING_OPTS="mode=active-backup miimon=200"
+ONBOOT=yes
+HOTPLUG=no

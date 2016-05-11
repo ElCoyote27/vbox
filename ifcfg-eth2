@@ -5,6 +5,7 @@ TYPE=Ethernet
 NM_CONTROLLED=no
 BOOTPROTO=static
 ONBOOT=yes
+HOTPLUG=no
 USERCTL=no
 ARP=yes
 ETHTOOL_OPTS="-s ${DEVICE} speed 1000 duplex full autoneg on"
