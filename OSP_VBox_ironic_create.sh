@@ -75,6 +75,7 @@ do
 		properties/memory_mb=${vm_slave_memory_default} \
 		properties/local_gb=62 \
 		properties/cpu_arch=x86_64 \
+		driver_info/vbox_use_headless=true \
 		\""
 
 	case ${IRONIC_NODE} in
