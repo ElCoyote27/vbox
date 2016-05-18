@@ -177,9 +177,9 @@ fi
 if [ "${CONFIG_FOR}" = "128GB" ]; then
 	vm_slave_memory_default=4128
 
-	vm_slave_memory_mb[1]=8192
-	vm_slave_memory_mb[2]=8192
-	vm_slave_memory_mb[3]=8192
+	vm_slave_memory_mb[1]=16384
+	vm_slave_memory_mb[2]=16384
+	vm_slave_memory_mb[3]=16384
 	vm_slave_memory_mb[4]=4128
 	vm_slave_memory_mb[5]=4128
 	vm_slave_memory_mb[6]=4128
