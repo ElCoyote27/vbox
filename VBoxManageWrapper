@@ -6,9 +6,10 @@ LOG_FILE=/var/tmp/VBoxManageWrapper.log
 
 #
 loop=0
-max_loop=5
+max_loop=15
+look_delay=1
 
-echo "Received ($(date +%Y%m%d%H%M)): ${VBOX_CMD} $@ " >> ${LOG_FILE}
+#### echo "Received ($(date +%Y%m%d%H%M)): ${VBOX_CMD} $@ " >> ${LOG_FILE}
 
 case $1 in
 	'startvm'|'controlvm')
@@ -16,7 +17,8 @@ case $1 in
 		;;
 	'modifyvm')
 		VM_NAME=$2
-		/usr/bin/VBoxManageWrapper controlvm ${VM_NAME} poweroff
+		# /usr/bin/VBoxManageWrapper controlvm ${VM_NAME} poweroff
+		/usr/bin/VBoxManageWrapper controlvm ${VM_NAME} acpipowerbutton
 		VARGS="$@"
 		;;
 	*)
@@ -27,7 +29,7 @@ esac
 
 while [ $loop -lt $max_loop ];
 do
-	echo "Executing ($(date +%Y%m%d%H%M)): ${VBOX_CMD} ${VARGS} " >> ${LOG_FILE}
+	#### echo "Executing ($(date +%Y%m%d%H%M)): ${VBOX_CMD} ${VARGS} " >> ${LOG_FILE}
 	${VBOX_CMD} ${VARGS}
 	RET=$?
 	echo "Got rc=${RET} ($(date +%Y%m%d%H%M)) from: ${VBOX_CMD} ${VARGS}" >> ${LOG_FILE}
@@ -36,6 +38,6 @@ do
 	else
 		loop=$((loop + 1))
 		echo "Retrying ${loop}/${max_loop} ($(date +%Y%m%d%H%M))..." >> ${LOG_FILE}
-		sleep 1
+		sleep ${loop_delay}
 	fi
 done
