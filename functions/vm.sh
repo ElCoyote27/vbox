@@ -97,7 +97,7 @@ create_vm() {
 	VBoxManage modifyvm ${name} --rtcuseutc on --memory ${memory_mb} --cpus ${cpu_cores} --vram 64
 
 	# Enable Page Fusion
-	VBoxManage modifyvm ${name} --pagefusion off --nestedpaging on --vtxvpid on --largepages on
+	VBoxManage modifyvm ${name} --pagefusion on --nestedpaging on --vtxvpid on --largepages on
 
 	# Set Paravirtualization driver..
 	VBoxManage modifyvm ${name} --paravirtprovider kvm
