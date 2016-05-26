@@ -14,11 +14,14 @@ else
 fi
 
 
-# Get the SSH Key
-for i in $(seq 1 ${cluster_size})
+# Get the VMs
+VBOX_VM_LIST=$(ssh ${VBOX_USER}@${VBOX_HOST} "VBoxManage list vms|awk '{ if ( \$1 ~ /osp-baremetal/) { print \$1 }}'"|xargs)
+
+# Iterate and delete
+for myvm in ${VBOX_VM_LIST}
 do
-	IRONIC_NODE="osp-baremetal-${i}"
-	sudo ssh  ${INSTACK} "su - stack -c \". ./stackrc ; \
+	IRONIC_NODE="${myvm}"
+	ssh stack@${INSTACK} ". ./stackrc ; \
 		ironic node-set-power-state ${IRONIC_NODE} off ; \
-		ironic node-delete ${IRONIC_NODE}\""
+		ironic node-delete ${IRONIC_NODE}"
 done
