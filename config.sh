@@ -40,7 +40,7 @@ vm_nic_type=82540EM
 # If you want to remove all existing vbox interfaces, then use rm_network=1
 # 0 - don't remove all vbox networks. Remove only instack networks if they exist
 # 1 - remove all vbox networks
-rm_network=1
+rm_network=0
 
 # Please add the IPs accordingly if you going to create non-default NICs number
 # 10.20.0.1/24   - ctlplane
