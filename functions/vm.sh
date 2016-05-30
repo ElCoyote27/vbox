@@ -96,8 +96,8 @@ create_vm() {
 	# Set video memory to 64MB, so VirtualBox does not complain about "non-optimal" settings in the UI
 	VBoxManage modifyvm ${name} --rtcuseutc on --memory ${memory_mb} --cpus ${cpu_cores} --vram 64
 
-	# Enable Page Fusion
-	VBoxManage modifyvm ${name} --pagefusion on --nestedpaging on --vtxvpid on --largepages on
+	# Disable Page Fusion, Enable Large Pages and Nested Paging..
+	VBoxManage modifyvm ${name} --pagefusion off --nestedpaging on --vtxvpid on --largepages on
 
 	# Set Paravirtualization driver..
 	VBoxManage modifyvm ${name} --paravirtprovider kvm
