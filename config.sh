@@ -30,9 +30,9 @@ vm_serial_info="${HOME}/README_vbox_console.txt"
 vm_name_prefix=osp-
 
 # NIC type:
-#vm_nic_type=82540EM
+vm_nic_type=82540EM
 #vm_nic_type=82545EM
-vm_nic_type=82543GC
+#vm_nic_type=82543GC
 #vm_nic_type=virtio
 
 # By default, all available network interfaces vboxnet won't be removed,
