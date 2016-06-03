@@ -1,9 +1,9 @@
 #!/bin/bash
 #
 # Requirements: This script must be capable of:
-# sudo ssh ${INSTACK} -l root
+# sudo ssh ${INSTACK_HOST_IP} -l root
 #   and:
-# sudo ssh ${INSTACK} -l root "su - stack -c 'ssh ${VBOX_HOST_IP} -l ${VBOX_USER} VBoxManage'"
+# sudo ssh ${INSTACK_HOST_IP} -l root "su - stack -c 'ssh ${VBOX_HOST_IP} -l ${VBOX_USER} VBoxManage'"
 #
 
 # Initial setup
@@ -17,14 +17,25 @@ IRONIC_KEY="/home/stack/.ssh/ironic_key"
 if [ -f .vbox_creds ]; then
 	. .vbox_creds
 else
-	echo "NO credentials for VBOX Manager found in ./.sm_creds!" ; exit 127
+	echo "NO credentials for VBOX Manager found in ./.vbox_creds!" ; exit 127
+fi
+
+# Get the IP of the VBOX hypervisor
+VBOX_HOST_IP=$(getent hosts ${VBOX_HOST}|awk '{ print $1 }')
+if [ "x${VBOX_HOST_IP}" = "x" ]; then
+	echo "Unable to find IP for ${VBOX_HOST}" ; exit 127
+fi
+# Get the IP of the Instack VM
+INSTACK_HOST_IP=$(getent hosts ${INSTACK_HOST}|awk '{ print $1 }')
+if [ "x${INSTACK_HOST_IP}" = "x" ]; then
+	echo "Unable to find IP for ${INSTACK_HOST}" ; exit 127
 fi
 
 # Read the SSH priv key and copy it to the Instack machine..
 if [ -f ${VBOX_SSH_KEY_FILE} ]; then
-	ssh-copy-id -i ${VBOX_SSH_KEY_FILE} stack@${INSTACK}
-	ssh-copy-id -i ${VBOX_SSH_KEY_FILE} ${VBOX_USER}@${VBOX_HOST}
-	scp -p ${VBOX_SSH_KEY_FILE} stack@${INSTACK}:${IRONIC_KEY}
+	ssh-copy-id -i ${VBOX_SSH_KEY_FILE} stack@${INSTACK_HOST_IP}
+	ssh-copy-id -i ${VBOX_SSH_KEY_FILE} ${VBOX_USER}@${VBOX_HOST_IP}
+	scp -p ${VBOX_SSH_KEY_FILE} stack@${INSTACK_HOST_IP}:${IRONIC_KEY}
 else
 	echo "Unable to locate SSH private key at ${VBOX_SSH_KEY_FILE} on $(uname -n)" ; exit 127
 fi
@@ -35,7 +46,7 @@ do
 	IRONIC_NODE="osp-baremetal-${i}"
 
 	# Create ironic node..
-	ssh stack@${INSTACK} " \
+	ssh stack@${INSTACK_HOST_IP} " \
 		. ./stackrc ; ironic node-create -n ${IRONIC_NODE} \
 		-d pxe_ssh \
 		-i ssh_address=${VBOX_HOST_IP} \
@@ -49,13 +60,13 @@ do
 		##### -i ssh_password=\"${VBOX_USER_PWD}\" \
 
 	# Find the UUID from the ironic node creatd previously
-	IRONIC_UUID=$(ssh stack@${INSTACK} " \
+	IRONIC_UUID=$(ssh stack@${INSTACK_HOST_IP} " \
 		. ./stackrc ; \
 		ironic node-show ${IRONIC_NODE}| \
 		awk '{ if ( \$2 == \"uuid\" )  { print \$4 } }' ")
 
 	# Find and process MAC address
-	tmpMAC=$( (ssh ${VBOX_USER}@${VBOX_HOST} " \
+	tmpMAC=$( (ssh ${VBOX_USER}@${VBOX_HOST_IP} " \
 		 VBoxManage showvminfo ${IRONIC_NODE}")|grep NIC.1|sed -e 's/.*MAC: *//' -e 's/,.*//')
 
 	a1=$(echo ${tmpMAC}|cut -c-2)
@@ -67,7 +78,7 @@ do
 	IRONIC_MAC="${a1}:${a2}:${a3}:${a4}:${a5}:${a6}"
 
 	# Update the VM's properties
-	ssh stack@${INSTACK} " \
+	ssh stack@${INSTACK_HOST_IP} " \
 		. ./stackrc ; \
 		ironic node-update ${IRONIC_UUID} add \
 		properties/cpus=${vm_slave_cpu_default} \
@@ -97,7 +108,7 @@ do
 	
 	# Update the VM's properties
 	if [ "x${NODE_PROFILE}" != "x" ]; then
-		ssh stack@${INSTACK} " \
+		ssh stack@${INSTACK_HOST_IP} " \
 			. ./stackrc ; \
 			ironic node-update ${IRONIC_UUID} add \
 			properties/capabilities=profile:${NODE_PROFILE},boot_option:local \
@@ -105,13 +116,13 @@ do
 	fi
 
 	# Create a port for the VM on the ctlplane network (NIC1)
-	ssh stack@${INSTACK} " \
+	ssh stack@${INSTACK_HOST_IP} " \
 		. ./stackrc ; \
 		ironic port-create -n ${IRONIC_UUID} -a ${IRONIC_MAC} \
 		"
 
 	# Set the power state to 'on'
-	ssh stack@${INSTACK} " \
+	ssh stack@${INSTACK_HOST_IP} " \
 		. ./stackrc ; \
 		ironic node-set-power-state ${IRONIC_NODE} off \
 		"
@@ -120,6 +131,6 @@ done
 
 # Last steps:
 
-ssh stack@${INSTACK} ". ./stackrc ; openstack baremetal configure boot ; openstack baremetal show capabilities"
+ssh stack@${INSTACK_HOST_IP} ". ./stackrc ; openstack baremetal configure boot ; openstack baremetal show capabilities"
 
 echo "Please remember to: \"openstack baremetal introspection bulk start\" "
