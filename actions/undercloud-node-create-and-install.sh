@@ -28,6 +28,9 @@ source ./functions/product.sh
 # Create the serial port and IP info file..
 echo "# $(date)" | tee ${vm_serial_info}
 
+# Get the bridged NIC
+hypervisor_bridged_nic=$(get_hypervisor_bridged_nic)
+
 # Create master node for the product
 # Get variables "host_nic_name" for the master node
 get_instack_name_ifaces
@@ -41,13 +44,16 @@ else
 	create_vm ${name} "${host_nic_name[0]}" ${vm_master_cpu_cores} ${vm_master_memory_mb} ${vm_master_disk_mb}
 	echo
 
-	# Add additional NICs
-	add_hostonly_adapter_to_vm ${name} 2 "${host_nic_name[1]}"
+	# Change first NIC back to intel (undercloud will not PXE, unlike the baremetal VMs)
+	# VBoxManage modifyvm ${name} --nictype1 ${vm_boot_nic_type}
 
-	add_hostonly_adapter_to_vm ${name} 3 "${host_nic_name[2]}"
+	# Add additional NICs
+	add_hostonly_adapter_to_vm ${name} 2 "${host_nic_name[1]}" ${vm_default_nic_type}
+
+	add_hostonly_adapter_to_vm ${name} 3 "${host_nic_name[2]}" ${vm_default_nic_type}
 
 	# Add bridged adapter to VM (replaces nic4)
-	add_bridge_adapter_to_vm ${name} 4 "${hypervisor_bridged_nic}"
+	add_bridge_adapter_to_vm ${name} 4 "${hypervisor_bridged_nic}" ${vm_default_nic_type}
 
 	# Add NAT adapter for internet access for all systems
 	# add_nat_adapter_to_vm $name 5 $vm_master_nat_network
@@ -68,11 +74,16 @@ if [ "x${vmaddr}" != "x" ]; then
 	i=1 ; temp_ip=""
 	while [ ${i} -lt 120 ]
 	do
+		vmbcast=$(/sbin/ip -4 -o a l dev ${hypervisor_bridged_nic} |awk '{ if (( $3 == "inet") && ( $5 == "brd")) { print $6 } }')
+		/bin/ping -q -c1 -b ${vmbcast} > /dev/null 2>&1
 		sleep 1s ; echo -n "."
-		temp_ip=$(arp -an|sed -e 's/://g'|grep -i ${vmaddr}|sed -e 's/.*(//' -e 's/).*//'|sort -un)
+		temp_ip=$(/sbin/arp -an|sed -e 's/://g'|grep -i ${vmaddr}|sed -e 's/.*(//' -e 's/).*//'|sort -un)
 		if [ "x${temp_ip}" != "x" ]; then
 			echo "${name} is at IP: ${temp_ip}" | tee -a ${vm_serial_info}
 			vm_master_ip="${temp_ip}"
+			if [ -f ./.vbox_creds ]; then
+				perl -pi -e "s/INSTACK_HOST=.*/INSTACK_HOST=${vm_master_ip}/g" ./.vbox_creds
+			fi
 			i=121
 		fi
 	done
