@@ -24,6 +24,9 @@ source ./config.sh
 source ./functions/vm.sh
 source ./functions/network.sh
 
+# Get the bridged NIC
+hypervisor_bridged_nic=$(get_hypervisor_bridged_nic)
+
 # Get variables "host_nic_name" for the slave nodes
 get_baremetal_name_ifaces
 
@@ -41,7 +44,7 @@ for idx in $(eval echo {1..${cluster_size}}); do
 	# Add additional NICs to VM
 	if [ ${#host_nic_name[*]} -gt 1 ]; then
 		for nic in $(eval echo {1..$((${#host_nic_name[*]}-1))}); do
-			add_hostonly_adapter_to_vm ${name} $((nic+1)) "${host_nic_name[${nic}]}"
+			add_hostonly_adapter_to_vm ${name} $((nic+1)) "${host_nic_name[${nic}]}" ${vm_default_nic_type}
 		done
 	fi
 
@@ -52,17 +55,17 @@ for idx in $(eval echo {1..${cluster_size}}); do
 	echo
 	add_disk_to_vm ${name} 1 ${vm_slave_second_disk_mb}
 	sleep 0.1
-	add_disk_to_vm ${name} 2 ${vm_slave_third_disk_mb}
+	add_disk_to_vm ${name} 2 ${vm_slave_extra_disk_mb}
 	sleep 0.1
-	add_disk_to_vm ${name} 3 ${vm_slave_third_disk_mb}
+	add_disk_to_vm ${name} 3 ${vm_slave_extra_disk_mb}
 	sleep 0.1
-	add_disk_to_vm ${name} 4 ${vm_slave_third_disk_mb}
+	add_disk_to_vm ${name} 4 ${vm_slave_extra_disk_mb}
 	sleep 0.1
-	add_disk_to_vm ${name} 5 ${vm_slave_third_disk_mb}
+	add_disk_to_vm ${name} 5 ${vm_slave_extra_disk_mb}
 	sleep 0.1
-	add_disk_to_vm ${name} 6 ${vm_slave_third_disk_mb}
+	add_disk_to_vm ${name} 6 ${vm_slave_extra_disk_mb}
 	sleep 0.1
-	add_disk_to_vm ${name} 7 ${vm_slave_third_disk_mb}
+	add_disk_to_vm ${name} 7 ${vm_slave_extra_disk_mb}
 	sleep 0.1
 
 	enable_network_boot_for_vm ${name}
