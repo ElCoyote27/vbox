@@ -24,7 +24,7 @@ VBOX_USER_PWD=""
 # VBOX_SSH_KEY_FILE must be local to the system where the script is run..
 VBOX_SSH_KEY_FILE=$HOME/.ssh/id_rsa
 # Instack IP or hostname
-INSTACK=myinstack
+INSTACK_HOST=myinstack
 
 
 Run
