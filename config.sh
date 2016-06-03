@@ -89,7 +89,7 @@ case "$(uname)" in
 esac
 
 # Master node settings
-vm_master_memory_mb=8192
+vm_master_memory_mb=16384
 vm_master_disk_mb=65535
 
 # Master node access to the internet through the host system, using VirtualBox NAT adapter
