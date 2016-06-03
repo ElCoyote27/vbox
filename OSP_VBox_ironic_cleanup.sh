@@ -14,14 +14,21 @@ else
 fi
 
 # Get the IP of the VBOX hypervisor
-VBOX_HOST_IP=$(getent hosts ${VBOX_HOST}|awk '{ print $1 }')
+VBOX_HOST_IP=$(/usr/bin/getent ahosts ${VBOX_HOST}|awk '/STREAM/ { print $1 }')
 if [ "x${VBOX_HOST_IP}" = "x" ]; then
 	echo "Unable to find IP for ${VBOX_HOST}" ; exit 127
 fi
 # Get the IP of the Instack VM
-INSTACK_HOST_IP=$(getent hosts ${INSTACK_HOST}|awk '{ print $1 }')
+INSTACK_HOST_IP=$(/usr/bin/getent ahosts ${INSTACK_HOST}|awk '/STREAM/ { print $1 }')
 if [ "x${INSTACK_HOST_IP}" = "x" ]; then
 	echo "Unable to find IP for ${INSTACK_HOST}" ; exit 127
+fi
+
+# Sanity Check
+ssh -q stack@${INSTACK_HOST_IP} test -f stackrc
+if [ $? -ne 0 ]; then
+	echo "(EE) Stack not installed or no \$HOME/stackrc file found!"
+	exit 127
 fi
 
 # Get the VMs
