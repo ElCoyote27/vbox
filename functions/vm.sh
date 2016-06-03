@@ -16,6 +16,19 @@
 
 # This file contains the functions to manage VMs in through VirtualBox CLI
 
+get_hypervisor_bridged_nic() {
+	if [ "x${hypervisor_bridged_nic_list}" != "x" ];then
+		for myif in ${hypervisor_bridged_nic_list}
+		do
+			if [ -d /sys/class/net/${myif} ]; then
+				>&2  echo "Selected Bridged NIC: ${myif}"
+				echo ${myif}
+				break
+			fi
+		done
+	fi
+}
+
 get_vm_base_path() {
 	echo `VBoxManage list systemproperties | grep '^Default machine folder' | sed 's/^Default machine folder\:[ \t]*//'`
 }
@@ -102,8 +115,12 @@ create_vm() {
 	# Set Paravirtualization driver..
 	VBoxManage modifyvm ${name} --paravirtprovider kvm
 
+	# Change chipset to ICH9 or PIIX3
+	VBoxManage modifyvm ${name} --chipset piix3
+	# VBoxManage modifyvm ${name} --chipset ich9
+
 	# Configure main network interface for management/PXE network
-	add_hostonly_adapter_to_vm ${name} 1 "${nic}"
+	add_hostonly_adapter_to_vm ${name} 1 "${nic}" ${vm_boot_nic_type}
 	VBoxManage modifyvm ${name} --boot1 disk --boot2 dvd --boot3 net --boot4 none
 
 	# Configure storage controllers
@@ -128,26 +145,26 @@ add_hostonly_adapter_to_vm() {
 	name=${1}
 	id=${2}
 	nic=${3}
-	echo "Adding hostonly adapter to ${name} and bridging with host NIC ${nic}..."
+	vm_nic_type=${4}
 
+	echo "Adding hostonly adapter to ${name} and bridging with host NIC ${nic}, type ${vm_nic_type}..."
 	# Add Intel PRO/1000 MT Desktop (82540EM) card to VM. The card is 1Gbps.
-	# Add Intel PRO/1000 MT Server (82545EM) card to VM. The card is 1Gbps.
 	VBoxManage modifyvm ${name} --nic${id} hostonly --hostonlyadapter${id} "${nic}" --nictype${id} ${vm_nic_type} \
 	--cableconnected${id} on --macaddress${id} auto
-	VBoxManage modifyvm  ${name}  --nicpromisc${id} allow-all
+	VBoxManage modifyvm  ${name} --nicpromisc${id} allow-all
 }
 
 add_nat_adapter_to_vm() {
 	name=${1}
 	id=${2}
 	nat_network=${3}
-	echo "Adding NAT adapter to ${name} for outbound network access through the host system..."
+	vm_nic_type=${4}
 
+	echo "Adding NAT adapter to ${name} for outbound network access through the host system, type ${vm_nic_type}..."
 	# Add Intel PRO/1000 MT Desktop (82540EM) card to VM. The card is 1Gbps.
-	# Add Intel PRO/1000 MT Server (82545EM) card to VM. The card is 1Gbps.
 	VBoxManage modifyvm ${name} --nic${id} nat --nictype${id} ${vm_nic_type} \
 	--cableconnected${id} on --macaddress${id} auto --natnet${id} "${nat_network}"
-	VBoxManage modifyvm  ${name}  --nicpromisc${id} allow-all
+	VBoxManage modifyvm  ${name} --nicpromisc${id} allow-all
 	VBoxManage controlvm ${name} setlinkstate${id} on
 }
 
@@ -155,14 +172,13 @@ add_bridge_adapter_to_vm() {
 	name=${1}
 	id=${2}
 	nic=${3}
-	echo "Adding Bridge adapter to ${name} for outbound network access through the host network..."
+	vm_nic_type=${4}
 
+	echo "Adding Bridge adapter to ${name} for outbound network access through the host network, type ${vm_nic_type}..."
 	# Add Intel PRO/1000 MT Desktop (82540EM) card to VM. The card is 1Gbps.
-	# Add Intel PRO/1000 MT Server (82545EM) card to VM. The card is 1Gbps.
 	VBoxManage modifyvm ${name} --nic${id} bridged --nictype${id} ${vm_nic_type} \
 	--cableconnected${id} on --macaddress${id} auto --bridgeadapter${id} "${nic}"
-	VBoxManage modifyvm  ${name}  --nicpromisc${id} allow-all
-	VBoxManage controlvm ${name} setlinkstate${id} on
+	VBoxManage modifyvm  ${name} --nicpromisc${id} allow-all
 }
 
 add_disk_to_vm() {
