@@ -19,9 +19,9 @@ source ./functions/memory.sh
 # Get the first available ISO from the directory 'iso'
 iso_path=`ls -1t iso/*.iso 2>/dev/null | head -1`
 
-# This is the network interface on the host that instack's eth3 will be bridged too.
-hypervisor_bridged_nic="bond0"
-# hypervisor_bridged_nic="enp0s25"
+# This is the network interface on the host that instack's eth3/bond3 will be bridged too.
+# Try every interface in the list in order..
+hypervisor_bridged_nic_list="enp0s25 bond0 eth0"
 
 # This file will carry information about the serial ports and instack's IP addres
 vm_serial_info="${HOME}/README_vbox_console.txt"
@@ -29,11 +29,12 @@ vm_serial_info="${HOME}/README_vbox_console.txt"
 # Every Mirantis OpenStack machine name will start from this prefix
 vm_name_prefix=osp-
 
-# NIC type:
-vm_nic_type=82540EM
-#vm_nic_type=82545EM
-#vm_nic_type=82543GC
-#vm_nic_type=virtio
+# NIC types. Boot NIC must be intel or AMD. Other NICs can be virtio
+# Types: 82540EM, 82545EM, 82543GC, Am79C973, virtio
+vm_boot_nic_type=virtio
+#vm_boot_nic_type=82540EM
+vm_default_nic_type=virtio
+#vm_default_nic_type=82540EM
 
 # By default, all available network interfaces vboxnet won't be removed,
 # if their IP addresses don't match with instack_master_ips (10.20.0.1 172.16.0.254
@@ -88,7 +89,7 @@ case "$(uname)" in
 esac
 
 # Master node settings
-vm_master_memory_mb=16384
+vm_master_memory_mb=8192
 vm_master_disk_mb=65535
 
 # Master node access to the internet through the host system, using VirtualBox NAT adapter
@@ -226,8 +227,8 @@ fi
 # depending on the roles applied to the server.
 # Nodes with combined roles may require more disk space.
 vm_slave_first_disk_mb=65535
-vm_slave_second_disk_mb=4194304
-vm_slave_third_disk_mb=4194304
+vm_slave_second_disk_mb=8388608
+vm_slave_extra_disk_mb=8388608
 
 # Set to 1 to run VirtualBox in headless mode
 headless=1
