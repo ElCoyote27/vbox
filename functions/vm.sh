@@ -137,7 +137,7 @@ create_vm() {
 	# gmake -j4 DEBUG=script bin/1af41000.rom
 
 	set -x
-	if [ "x${vm_boot_nic_type}" = "xvirtio" -a "x${rom_path} != "x" ]; then
+	if [ "x${vm_boot_nic_type}" = "xvirtio" -a "x${rom_path}" != "x" ]; then
 		if [ -f ${rom_path} ]; then
 			VBoxManage setextradata ${name} VBoxInternal/Devices/pcbios/0/Config/LanBootRom ${rom_path}
 		fi
