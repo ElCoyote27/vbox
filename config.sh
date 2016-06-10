@@ -19,6 +19,9 @@ source ./functions/memory.sh
 # Get the first available ISO from the directory 'iso'
 iso_path=`ls -1t iso/*.iso 2>/dev/null | head -1`
 
+# Get the iPXE payload for virtio with bzImage support
+rom_path=$(ls -d $(pwd)/rom/*.rom 2>/dev/null | head -1)
+
 # This is the network interface on the host that instack's eth3/bond3 will be bridged too.
 # Try every interface in the list in order..
 hypervisor_bridged_nic_list="enp0s25 bond0 eth0"
@@ -31,10 +34,10 @@ vm_name_prefix=osp-
 
 # NIC types. Boot NIC must be intel or AMD. Other NICs can be virtio
 # Types: 82540EM, 82545EM, 82543GC, Am79C973, virtio
-vm_boot_nic_type=virtio
-#vm_boot_nic_type=82540EM
-vm_default_nic_type=virtio
-#vm_default_nic_type=82540EM
+#vm_boot_nic_type=virtio
+vm_boot_nic_type=82540EM
+#vm_default_nic_type=virtio
+vm_default_nic_type=82540EM
 
 # By default, all available network interfaces vboxnet won't be removed,
 # if their IP addresses don't match with instack_master_ips (10.20.0.1 172.16.0.254

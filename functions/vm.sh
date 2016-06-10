@@ -121,6 +121,29 @@ create_vm() {
 
 	# Configure main network interface for management/PXE network
 	add_hostonly_adapter_to_vm ${name} 1 "${nic}" ${vm_boot_nic_type}
+
+	# Fix the iPXE rom thing if driver is virtio
+	# More info here: http://etherboot.org/wiki/romburning/vbox
+	# And here: https://github.com/SpencerBrown/virtualbox-ipxe
+	# 
+	# So here's the catch: VBox doesn't have an iPXE rom for virtio.
+	# You could build a ROM from www.ipxe.org but VBox would fail to use
+	# it as it discards ROMs larger than 56K PXE roms..
+	#
+	# Lucklily, deep within the vbox source there's an ipxe that can be modified
+	# to support bzImage -and- be less than 56k.. This build is provided in the rom
+	# subdir. I built that image with 5.0.20SVN like this:
+	# cd src/VBox/Devices/PC/ipxe
+	# gmake -j4 DEBUG=script bin/1af41000.rom
+
+	set -x
+	if [ "x${vm_boot_nic_type}" = "xvirtio" -a "x${rom_path} != "x" ]; then
+		if [ -f ${rom_path} ]; then
+			VBoxManage setextradata ${name} VBoxInternal/Devices/pcbios/0/Config/LanBootRom ${rom_path}
+		fi
+	fi
+	set +x
+
 	VBoxManage modifyvm ${name} --boot1 disk --boot2 dvd --boot3 net --boot4 none
 
 	# Configure storage controllers
