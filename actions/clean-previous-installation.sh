@@ -25,5 +25,9 @@ source ./functions/vm.sh
 source ./functions/network.sh
 
 # Delete all VMs from the previous Mirantis OpenStack installation
-# delete_vms_multiple $vm_name_prefix
-delete_slave_vms_multiple ${vm_name_prefix}
+
+if [ ${rm_instack} -eq 1 ]; then
+	delete_vms_multiple $vm_name_prefix
+else
+	delete_slave_vms_multiple ${vm_name_prefix}
+fi

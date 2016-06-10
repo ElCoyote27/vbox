@@ -34,10 +34,9 @@ vm_name_prefix=osp-
 
 # NIC types. Boot NIC must be intel or AMD. Other NICs can be virtio
 # Types: 82540EM, 82545EM, 82543GC, Am79C973, virtio
-#vm_boot_nic_type=virtio
 vm_boot_nic_type=82540EM
-#vm_default_nic_type=virtio
-vm_default_nic_type=82540EM
+vm_default_nic_type=virtio
+#vm_default_nic_type=82540EM
 
 # By default, all available network interfaces vboxnet won't be removed,
 # if their IP addresses don't match with instack_master_ips (10.20.0.1 172.16.0.254
@@ -46,6 +45,11 @@ vm_default_nic_type=82540EM
 # 0 - don't remove all vbox networks. Remove only instack networks if they exist
 # 1 - remove all vbox networks
 rm_network=1
+
+# By Default, the undercloud isn't deleted when you run 'clean'. It must
+# be deleted manually. Please set the following to '1' to have clean delete
+# the undercloud as well.
+rm_instack=0
 
 # Please add the IPs accordingly if you going to create non-default NICs number
 # 10.20.0.1/24   - ctlplane
