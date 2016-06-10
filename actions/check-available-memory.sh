@@ -42,6 +42,6 @@ else
 	if [ ${vm_total_mb} -gt ${can_allocate_mb} ]; then
 		echo "Your host has not enough memory."
 		echo "You can allocate no more than ${can_allocate_mb}MB, but trying to run VMs with ${vm_total_mb}MB"
-#		exit 1
+		exit 1
 	fi
 fi
