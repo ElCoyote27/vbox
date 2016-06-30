@@ -9,4 +9,3 @@ HOTPLUG=no
 IPV6INIT=no
 USERCTL=no
 ARP=yes
-ETHTOOL_OPTS="-s ${DEVICE} speed 1000 duplex full autoneg on"
