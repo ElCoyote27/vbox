@@ -35,7 +35,7 @@ else
 			vm_total_mb=$(( ${vm_total_mb} + ${vm_slave_memory_default} ))
 		fi
 	done
-	vm_total_mb=$(( ${vm_total_mb} + ${vm_master_memory_mb} ))
+	vm_total_mb=$(echo "scale=0;(( ${vm_total_mb} + ${vm_master_memory_mb} ) * ${vbox_overcommit_ratio})/1" |bc)
 
 	# Do not run VMs if host PC not have enough RAM
 	can_allocate_mb=$(( (${total_memory} - 524288) / 1024 ))
@@ -43,5 +43,7 @@ else
 		echo "Your host has not enough memory."
 		echo "You can allocate no more than ${can_allocate_mb}MB, but trying to run VMs with ${vm_total_mb}MB"
 		exit 1
+	else
+		echo "Assuming ${vbox_overcommit_ratio} memory overcommit ratio ( ${vm_total_mb} MB needed, ${can_allocate_mb} MB available)"
 	fi
 fi

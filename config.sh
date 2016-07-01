@@ -95,6 +95,9 @@ case "$(uname)" in
 		;;
 esac
 
+# Overcommit ratio (with nested paging and page fusion we can generally assume a 200% ratio)
+vbox_overcommit_ratio=0.5
+
 # Master node settings
 vm_master_memory_mb=16384
 vm_master_disk_mb=65535
