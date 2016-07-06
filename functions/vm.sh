@@ -34,11 +34,11 @@ get_vm_base_path() {
 }
 
 get_vms_running() {
-	echo `VBoxManage list runningvms | sed 's/[ \t]*{.*}//' | sed 's/^"//' | sed 's/"$//'`
+	echo `VBoxManage list runningvms | sed -e 's/[ \t]*{.*}//' -e 's/^"//' -e 's/"$//' |grep "^${vm_name_prefix}"`
 }
 
 get_vms_present() {
-	echo `VBoxManage list vms | sed 's/[ \t]*{.*}//' | sed 's/^"//' | sed 's/"$//'`
+	echo `VBoxManage list vms | sed -e 's/[ \t]*{.*}//' -e 's/^"//' -e 's/"$//' |grep "^${vm_name_prefix}"`
 }
 
 is_vm_running() {
@@ -70,7 +70,7 @@ check_running_vms() {
 	OIFS=${IFS}
 	IFS=","
 	local hostonly_interfaces=${1}
-	local list_running_vms=$(VBoxManage list runningvms | sed 's/\" {/\",{/g')
+	local list_running_vms=$(VBoxManage list runningvms | sed -e 's/\" {/\",{/g' | grep "^${vm_name_prefix}" )
 	for vm_name in ${list_running_vms}; do
 		vm_name=$(echo ${vm_name} | grep "\"" | sed 's/"//g')
 		vm_names+="${vm_name},"
