@@ -30,6 +30,6 @@ if [ ${rm_instack} -eq 1 ]; then
 	echo "Deleting all previous VMs..."
 	delete_vms_multiple $vm_name_prefix
 else
-	echo "Leeping previous VM undercloud/instack..."
+	echo "Keeping previous VM undercloud/instack..."
 	delete_slave_vms_multiple ${vm_name_prefix}
 fi
