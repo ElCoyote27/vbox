@@ -44,9 +44,9 @@ vm_default_nic_type=82540EM
 # If you want to remove all existing vbox interfaces, then use rm_network=1
 # 0 - don't remove all vbox networks. Remove only instack networks if they exist
 # 1 - remove all vbox networks
-rm_network=1
+rm_network=0
 
-# By Default, the undercloud isn't deleted when you run 'clean'. It must
+# By Default, the undercloud isn not deleted when you run 'clean'. It must
 # be deleted manually. Please set the following to '1' to have clean delete
 # the undercloud as well.
 rm_instack=0
