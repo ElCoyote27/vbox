@@ -66,17 +66,25 @@ fi
 echo
 start_vm ${name}
 
+# time to wait for the VM to show up on the network
+wait_time=120
+
 # Wait until guestOS is up
 sleep 1s
 vmaddr=$(VBoxManage showvminfo ${name}|grep NIC.4|sed -e 's/.*MAC: *//' -e 's/,.*//')
 if [ "x${vmaddr}" != "x" ]; then
 	echo -n "Trying to obtain IP addr for MAC ${vmaddr}..."
 	i=1 ; temp_ip=""
-	while [ ${i} -lt 120 ]
+	while [ ${i} -lt ${wait_time} ]
 	do
 		vmbcast=$(/sbin/ip -4 -o a l dev ${hypervisor_bridged_nic} |awk '{ if (( $3 == "inet") && ( $5 == "brd")) { print $6 } }')
 		/bin/ping -q -c1 -b ${vmbcast} > /dev/null 2>&1
-		sleep 1s ; echo -n "."
+		sleep 1s
+		echo -n "."
+		i=$((i+1))
+		if [ ${i} -eq ${wait_time} ]; then
+			echo "Timeout finding IP for ${name}!"
+		fi
 		temp_ip=$(/sbin/arp -an|sed -e 's/://g'|grep -i ${vmaddr}|sed -e 's/.*(//' -e 's/).*//'|sort -un)
 		if [ "x${temp_ip}" != "x" ]; then
 			echo "${name} is at IP: ${temp_ip}" | tee -a ${vm_serial_info}
