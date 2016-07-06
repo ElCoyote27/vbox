@@ -27,7 +27,7 @@ source ./functions/vm.sh
 source ./functions/product.sh
 
 # Master node name
-name="${vm_name_prefix}master"
+name="${vm_name_prefix}instack"
 
 # Enable outbound network/internet access for the machine
 enable_outbound_network_for_product_vm ${vm_master_ip} ${vm_master_username} ${vm_master_password} "${vm_master_prompt}" 3 ${vm_master_nat_gateway}
