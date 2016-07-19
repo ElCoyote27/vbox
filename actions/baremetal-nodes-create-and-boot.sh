@@ -23,6 +23,7 @@
 source ./config.sh
 source ./functions/vm.sh
 source ./functions/network.sh
+source ./.config
 
 # Get the bridged NIC
 hypervisor_bridged_nic=$(get_hypervisor_bridged_nic)

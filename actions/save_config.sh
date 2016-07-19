@@ -14,7 +14,9 @@ for value in \
 	vm_boot_nic_type vm_default_nic_type \
 	vm_master_cpu_cores vm_master_memory_mb vm_master_disk_mb \
 	cluster_size vm_slave_cpu_default vm_slave_memory_default \
-	vm_slave_first_disk_mb
+	vm_slave_first_disk_mb vbox_page_fusion
 do
-	echo "${value}=$(eval echo \$${value})" >> ${MYCONF}
+	if [ "x$(eval echo \$${value})" != "x" ]; then
+		echo "${value}=$(eval echo \$${value})" >> ${MYCONF}
+	fi
 done

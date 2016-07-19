@@ -25,6 +25,9 @@ export PATH=${PATH}:${vbox_path}
 ;;
 esac
 
+# Save the config..
+./actions/save_config.sh || exit 1
+
 # Prepare the host system
 ./actions/prepare-environment.sh || exit 1
 
@@ -42,6 +45,3 @@ esac
 
 # Create and launch slave nodes
 ./actions/baremetal-nodes-create-and-boot.sh || exit 1
-
-# Save the config..
-./actions/save_config.sh || exit 1

@@ -51,6 +51,10 @@ rm_network=0
 # the undercloud as well.
 rm_instack=0
 
+# By default, if you have plenty of memory, pagefusion isn't used.
+# If memory is scarce, then turn pagefusion on at the expense of more cpu usage.
+vbox_page_fusion="off"
+
 # Please add the IPs accordingly if you going to create non-default NICs number
 # 10.20.0.1/24   - ctlplane
 # 10.16.0.1/24  - OpenStack Public/External/Floating network

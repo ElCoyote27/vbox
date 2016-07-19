@@ -110,7 +110,9 @@ create_vm() {
 	VBoxManage modifyvm ${name} --rtcuseutc on --memory ${memory_mb} --cpus ${cpu_cores} --vram 64
 
 	# Disable Page Fusion, Enable Large Pages and Nested Paging..
-	VBoxManage modifyvm ${name} --pagefusion off --nestedpaging on --vtxvpid on --largepages on
+	set -x
+	VBoxManage modifyvm ${name} --pagefusion ${vbox_page_fusion} --nestedpaging on --vtxvpid on --largepages on
+	set +x
 
 	# Set Paravirtualization driver..
 	VBoxManage modifyvm ${name} --paravirtprovider kvm
@@ -136,13 +138,11 @@ create_vm() {
 	# cd src/VBox/Devices/PC/ipxe
 	# gmake -j4 DEBUG=script bin/1af41000.rom
 
-	set -x
 	if [ "x${vm_boot_nic_type}" = "xvirtio" -a "x${rom_path}" != "x" ]; then
 		if [ -f ${rom_path} ]; then
 			VBoxManage setextradata ${name} VBoxInternal/Devices/pcbios/0/Config/LanBootRom ${rom_path}
 		fi
 	fi
-	set +x
 
 	VBoxManage modifyvm ${name} --boot1 disk --boot2 dvd --boot3 net --boot4 none
 
@@ -344,6 +344,12 @@ start_vms_multiple() {
 
 start_vm() {
 	name=${1}
+
+	# Check if we are starting the undercloud VM... If we kept it from a previous
+	# install, make sure Page Fusion is set accordingly...
+	if [ "x${name}"  = "x${vm_name_prefix}instack" -a "x${rm_instack}" = "x0" ]; then
+		VBoxManage modifyvm ${name} --pagefusion ${vbox_page_fusion} 
+	fi
 
 	count=0
 	while ! is_vm_running ${name}; do

@@ -24,6 +24,7 @@ source ./config.sh
 source ./functions/vm.sh
 source ./functions/network.sh
 source ./functions/product.sh
+source ./.config
 
 # Create the serial port and IP info file..
 echo "# $(date)" | tee ${vm_serial_info}

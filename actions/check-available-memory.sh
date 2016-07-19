@@ -40,10 +40,21 @@ else
 	# Do not run VMs if host PC not have enough RAM
 	can_allocate_mb=$(( (${total_memory} - 524288) / 1024 ))
 	if [ ${vm_total_mb} -gt ${can_allocate_mb} ]; then
-		echo "Your host has not enough memory."
-		echo "You can allocate no more than ${can_allocate_mb}MB, but trying to run VMs with ${vm_total_mb}MB"
-		exit 1
+		echo "(**) Cannot use more than ${can_allocate_mb}MB, but was trying to run VMs with ${vm_total_mb}MB"
+		# Assuming a further 0.5 ratio for PageFusion
+		vm_total_mb=$(echo "scale=0;(( ${vm_total_mb} + ${vm_master_memory_mb} ) * ${vbox_overcommit_ratio}) * 0.5 /1" |bc)
+		if [ ${vm_total_mb} -gt ${can_allocate_mb} ]; then
+			echo "(**) Your host does NOT have enough memory (${vm_total_mb}MB needed with Page Fusion)."
+			echo "(**) Even with overcommit and Page Fusion enabled, not enough memory is available! Exit!"
+			exit 1
+		else
+			echo "(II) Forcing VBox Pagefusion to 'on' and continuing (assuming ${vm_total_mb}MB needed)..."
+			vbox_page_fusion="on"
+			if [ -f ./.config ]; then
+				sed -i -e 's/vbox_page_fusion=off/vbox_page_fusion=on/' ./.config
+			fi
+		fi
 	else
-		echo "Assuming ${vbox_overcommit_ratio} memory overcommit ratio ( ${vm_total_mb} MB needed, ${can_allocate_mb} MB available)"
+		echo "(II) Assuming ${vbox_overcommit_ratio} memory overcommit ratio ( ${vm_total_mb} MB needed, ${can_allocate_mb} MB available)"
 	fi
 fi
