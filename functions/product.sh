@@ -228,11 +228,13 @@ enable_outbound_network_for_product_vm() {
 	master_ip_pub_net="${master_ip_pub_net%.*}"".1"
 	local master_pub_net="${master_ip_pub_net%.*}"".0"
 
+	if [ "x${expect_enabled}" = "x1" ]; then
+
 	# Log in into the VM, configure and bring up the NAT interface, set default gateway, check internet connectivity
 	# Looks a bit ugly, but 'end of expect' has to be in the very beginning of the line
 	result=$(
 		expect << ENDOFEXPECT
-		spawn ssh ${ssh_options} ${username}@${ip}
+		#spawn ssh ${ssh_options} ${username}@${ip}
 		expect "connect to host" exit
 		expect "*?assword:*"
 		send "${password}\r"
@@ -291,6 +293,8 @@ ENDOFEXPECT
 		expect "${prompt}"
 ENDOFEXPECT
 	)
+
+	fi # / End of expect_enabled.."
 
 	# When you are launching command in a sub-shell, there are issues with IFS (internal field separator)
 	# and parsing output as a set of strings. So, we are saving original IFS, replacing it, iterating over lines,
