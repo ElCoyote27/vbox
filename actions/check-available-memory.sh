@@ -44,7 +44,7 @@ else
 		# Assuming a further 0.5 ratio for PageFusion
 		vm_total_mb=$(echo "scale=0;(( ${vm_total_mb} + ${vm_master_memory_mb} ) * ${vbox_overcommit_ratio}) * 0.5 /1" |bc)
 		if [ ${vm_total_mb} -gt ${can_allocate_mb} ]; then
-			echo "(**) Your host does NOT have enough memory (${vm_total_mb}MB needed with Page Fusion)."
+			echo "(**) Your host does NOT have enough memory (${vm_total_mb}MB needed)."
 			echo "(**) Even with overcommit and Page Fusion enabled, not enough memory is available! Exit!"
 			exit 1
 		else
