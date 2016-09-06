@@ -49,8 +49,15 @@ for idx in $(eval echo {1..${cluster_size}}); do
 		done
 	fi
 
-	# Add bridged adapter to VM (replaces nic4)
-	# add_bridge_adapter_to_vm $name $((${#host_nic_name[*]})) "${hypervisor_bridged_nic}"
+	case ${idx} in
+		[1-3])
+			# Controllers
+			# Add bridged adapter to VM (replaces nic4)
+			add_bridge_adapter_to_vm ${name} 4 "${hypervisor_bridged_nic}" ${vm_default_nic_type}
+			;;
+		*)
+			;;
+	esac
 
 	# Add additional disks to VM
 	echo
