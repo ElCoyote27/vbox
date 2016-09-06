@@ -191,22 +191,26 @@ fi
 # For dedicated Cinder, 768Mb is OK, but Ceph needs 1Gb minimum
 
 if [ "${CONFIG_FOR}" = "128GB" ]; then
-	vm_slave_memory_default=4128
+	vm_slave_memory_default=6144
 
+	# Controllers
 	vm_slave_memory_mb[1]=16384
 	vm_slave_memory_mb[2]=16384
 	vm_slave_memory_mb[3]=16384
-	vm_slave_memory_mb[4]=4128
-	vm_slave_memory_mb[5]=4128
-	vm_slave_memory_mb[6]=4128
-	vm_slave_memory_mb[7]=4128
-	vm_slave_memory_mb[8]=4128
+	# Ceph
+	vm_slave_memory_mb[4]=8192
+	vm_slave_memory_mb[5]=8192
+	vm_slave_memory_mb[6]=8192
+	vm_slave_memory_mb[7]=8192
+	vm_slave_memory_mb[8]=8192
 elif [ "${CONFIG_FOR}" = "64GB" ]; then
 	vm_slave_memory_default=4128
 
+	# Controllers
 	vm_slave_memory_mb[1]=8192
 	vm_slave_memory_mb[2]=8192
 	vm_slave_memory_mb[3]=8192
+	# Ceph
 	vm_slave_memory_mb[4]=4128
 	vm_slave_memory_mb[5]=4128
 	vm_slave_memory_mb[6]=4128
@@ -215,9 +219,11 @@ elif [ "${CONFIG_FOR}" = "64GB" ]; then
 elif [ "${CONFIG_FOR}" = "16GB" ]; then
 	vm_slave_memory_default=1536
 
-	vm_slave_memory_mb[1]=2048
-	vm_slave_memory_mb[2]=2048
-	vm_slave_memory_mb[3]=2048
+	# Controllers
+	vm_slave_memory_mb[1]=8192
+	vm_slave_memory_mb[2]=8192
+	vm_slave_memory_mb[3]=8192
+	# Ceph
 	vm_slave_memory_mb[4]=2048
 	vm_slave_memory_mb[5]=2048
 elif [ "${CONFIG_FOR}" = "8GB" ]; then
