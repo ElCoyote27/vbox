@@ -12,10 +12,11 @@ source ./functions/memory.sh
 MYCONF=".config"
 source ${MYCONF}
 IRONIC_KEY="/home/stack/.ssh/ironic_key"
+VBOX_CREDS=".$(uname -n)_vbox_creds"
 
 # Credentials
-if [ -f .vbox_creds ]; then
-	. .vbox_creds
+if [ -f ${VBOX_CREDS} ]; then
+	. ${VBOX_CREDS}
 else
 	echo "NO credentials for VBOX Manager found in ./.vbox_creds!" ; exit 127
 fi

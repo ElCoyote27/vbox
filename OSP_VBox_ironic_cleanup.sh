@@ -5,10 +5,11 @@ source ./config.sh
 source ./functions/memory.sh
 MYCONF=".config"
 source ${MYCONF}
+VBOX_CREDS=".$(uname -n)_vbox_creds" 
 
 # Credentials
-if [ -f .vbox_creds ]; then
-	. .vbox_creds
+if [ -f ${VBOX_CREDS} ]; then
+	. ${VBOX_CREDS}
 else
 	echo "NO credentials for subscription Manager found in ./.vbox_creds!" ; exit 127
 fi

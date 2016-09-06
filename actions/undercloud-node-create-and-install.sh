@@ -25,6 +25,7 @@ source ./functions/vm.sh
 source ./functions/network.sh
 source ./functions/product.sh
 source ./.config
+VBOX_CREDS=".$(uname -n)_vbox_creds" 
 
 # Create the serial port and IP info file..
 echo "# $(date)" | tee ${vm_serial_info}
@@ -90,8 +91,8 @@ if [ "x${vmaddr}" != "x" ]; then
 		if [ "x${temp_ip}" != "x" ]; then
 			echo "${name} is at IP: ${temp_ip}" | tee -a ${vm_serial_info}
 			vm_master_ip="${temp_ip}"
-			if [ -f ./.vbox_creds ]; then
-				perl -pi -e "s/INSTACK_HOST=.*/INSTACK_HOST=${vm_master_ip}/g" ./.vbox_creds
+			if [ -f ./${VBOX_CREDS} ]; then
+				perl -pi -e "s/INSTACK_HOST=.*/INSTACK_HOST=${vm_master_ip}/g" ./${VBOX_CREDS}
 			fi
 			i=121
 		fi
