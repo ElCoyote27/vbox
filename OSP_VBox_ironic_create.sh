@@ -12,13 +12,13 @@ source ./functions/memory.sh
 MYCONF=".config"
 source ${MYCONF}
 IRONIC_KEY="/home/stack/.ssh/ironic_key"
-VBOX_CREDS=".$(uname -n)_vbox_creds"
+VBOX_CREDS=".vbox_creds_$(uname -n)"
 
 # Credentials
 if [ -f ${VBOX_CREDS} ]; then
 	. ${VBOX_CREDS}
 else
-	echo "NO credentials for VBOX Manager found in ./.vbox_creds!" ; exit 127
+	echo "NO credentials for VBOX Manager found in ./.vbox_creds_$(uname -n)!" ; exit 127
 fi
 
 # Get the IP of the VBOX hypervisor

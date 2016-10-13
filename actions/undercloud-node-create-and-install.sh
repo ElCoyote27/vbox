@@ -25,7 +25,7 @@ source ./functions/vm.sh
 source ./functions/network.sh
 source ./functions/product.sh
 source ./.config
-VBOX_CREDS=".$(uname -n)_vbox_creds" 
+VBOX_CREDS=".vbox_creds_$(uname -n)"
 
 # Create the serial port and IP info file..
 echo "# $(date)" | tee ${vm_serial_info}
@@ -104,10 +104,10 @@ if [ "${skipinstackmenu}" = "yes" ]; then
 fi
 
 # Wait until the machine gets installed and Puppet completes its run
-#wait_for_product_vm_to_install $vm_master_ip $vm_master_username $vm_master_password "$vm_master_prompt"
+# wait_for_product_vm_to_install $vm_master_ip $vm_master_username $vm_master_password "$vm_master_prompt"
 
 # Enable outbound network/internet access for the machine
-enable_outbound_network_for_product_vm ${vm_master_ip} ${vm_master_username} ${vm_master_password} "${vm_master_prompt}" 3 ${vm_master_nat_gateway}
+# enable_outbound_network_for_product_vm ${vm_master_ip} ${vm_master_username} ${vm_master_password} "${vm_master_prompt}" 3 ${vm_master_nat_gateway}
 
 # Report success
 echo

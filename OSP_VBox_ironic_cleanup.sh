@@ -5,13 +5,13 @@ source ./config.sh
 source ./functions/memory.sh
 MYCONF=".config"
 source ${MYCONF}
-VBOX_CREDS=".$(uname -n)_vbox_creds" 
+VBOX_CREDS=".vbox_creds_$(uname -n)"
 
 # Credentials
 if [ -f ${VBOX_CREDS} ]; then
 	. ${VBOX_CREDS}
 else
-	echo "NO credentials for subscription Manager found in ./.vbox_creds!" ; exit 127
+	echo "NO credentials for subscription Manager found in ./.vbox_creds_$(uname -n)!" ; exit 127
 fi
 
 # Get the IP of the VBOX hypervisor
