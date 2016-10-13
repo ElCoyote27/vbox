@@ -103,7 +103,7 @@ esac
 vbox_overcommit_ratio=0.5
 
 # Master node settings
-vm_master_memory_mb=16384
+vm_master_memory_mb=24576
 vm_master_disk_mb=65535
 
 # Master node access to the internet through the host system, using VirtualBox NAT adapter
@@ -145,7 +145,8 @@ fi
 # You can specify CPU count for your nodes as you wish, but keep in mind resources of your machine.
 # If you don't, then will be used default parameter
 if [ "${CONFIG_FOR}" = "128GB" ]; then
-	vm_slave_cpu_default=2
+	vm_master_cpu_cores=2
+	vm_slave_cpu_default=4
 
 	vm_slave_cpu[1]=4
 	vm_slave_cpu[2]=4
@@ -191,18 +192,18 @@ fi
 # For dedicated Cinder, 768Mb is OK, but Ceph needs 1Gb minimum
 
 if [ "${CONFIG_FOR}" = "128GB" ]; then
-	vm_slave_memory_default=6144
+	vm_slave_memory_default=4128
 
 	# Controllers
 	vm_slave_memory_mb[1]=16384
 	vm_slave_memory_mb[2]=16384
 	vm_slave_memory_mb[3]=16384
 	# Ceph
-	vm_slave_memory_mb[4]=8192
-	vm_slave_memory_mb[5]=8192
-	vm_slave_memory_mb[6]=8192
-	vm_slave_memory_mb[7]=8192
-	vm_slave_memory_mb[8]=8192
+	vm_slave_memory_mb[4]=4128
+	vm_slave_memory_mb[5]=4128
+	vm_slave_memory_mb[6]=4128
+	vm_slave_memory_mb[7]=4128
+	vm_slave_memory_mb[8]=4128
 elif [ "${CONFIG_FOR}" = "64GB" ]; then
 	vm_slave_memory_default=4128
 
