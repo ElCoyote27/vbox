@@ -110,9 +110,7 @@ create_vm() {
 	VBoxManage modifyvm ${name} --rtcuseutc on --memory ${memory_mb} --cpus ${cpu_cores} --vram 64
 
 	# Disable Page Fusion, Enable Large Pages and Nested Paging..
-	set -x
 	VBoxManage modifyvm ${name} --pagefusion ${vbox_page_fusion} --nestedpaging on --vtxvpid on --largepages on
-	set +x
 
 	# Set Paravirtualization driver..
 	VBoxManage modifyvm ${name} --paravirtprovider kvm
@@ -142,6 +140,8 @@ create_vm() {
 		if [ -f ${rom_path} ]; then
 			VBoxManage setextradata ${name} VBoxInternal/Devices/pcbios/0/Config/LanBootRom ${rom_path}
 		fi
+	else
+		VBoxManage setextradata ${name} VBoxInternal/Devices/pcbios/0/Config/LanBootRom
 	fi
 
 	VBoxManage modifyvm ${name} --boot1 disk --boot2 dvd --boot3 net --boot4 none
