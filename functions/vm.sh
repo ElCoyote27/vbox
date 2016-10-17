@@ -21,11 +21,11 @@ get_hypervisor_bridged_nic() {
 		for myif in ${hypervisor_bridged_nic_list}
 		do
 			if [ -d /sys/class/net/${myif} ]; then
-				>&2  echo "Selected Bridged NIC: ${myif}"
 				echo ${myif}
 				break
 			fi
 		done
+		>&2  echo "Selected Bridged NIC: ${myif}"
 	fi
 }
 
