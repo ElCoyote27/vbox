@@ -2,7 +2,7 @@
 # NIC types. Boot NIC must be intel or AMD. Other NICs can be virtio
 # Types: 82540EM, 82545EM, 82543GC, Am79C973, virtio
 vm_boot_nic_type=82540EM
-vm_default_nic_type=82540EM
+vm_default_nic_type=virtio
 rom_path=$(ls -d $(pwd)/rom/*.rom 2>/dev/null | head -1)
 
 for i in {1..16}
