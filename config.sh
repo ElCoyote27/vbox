@@ -54,6 +54,19 @@ rm_instack=0
 # By default, if you have plenty of memory, pagefusion isn't used.
 # If memory is scarce, then turn pagefusion on at the expense of more cpu usage.
 vbox_page_fusion="off"
+vbox_vm_flags=""
+vbox_vm_flags="${vbox_vm_flags} --pagefusion ${vbox_page_fusion}"
+vbox_vm_flags="${vbox_vm_flags} --nestedpaging on"
+vbox_vm_flags="${vbox_vm_flags} --vtxvpid on"
+vbox_vm_flags="${vbox_vm_flags} --vtxux on"
+vbox_vm_flags="${vbox_vm_flags} --largepages on"
+vbox_vm_flags="${vbox_vm_flags} --chipset piix3"
+vbox_vm_flags="${vbox_vm_flags} --largepages on"
+vbox_vm_flags="${vbox_vm_flags} --pae off"
+vbox_vm_flags="${vbox_vm_flags} --longmode on"
+vbox_vm_flags="${vbox_vm_flags} --hpet on"
+vbox_vm_flags="${vbox_vm_flags} --hwvirtex on"
+vbox_vm_flags="${vbox_vm_flags} --triplefaultreset off"
 
 # Please add the IPs accordingly if you going to create non-default NICs number
 # 10.20.0.1/24   - ctlplane

@@ -110,14 +110,10 @@ create_vm() {
 	VBoxManage modifyvm ${name} --rtcuseutc on --memory ${memory_mb} --cpus ${cpu_cores} --vram 64
 
 	# Disable Page Fusion, Enable Large Pages and Nested Paging..
-	VBoxManage modifyvm ${name} --pagefusion ${vbox_page_fusion} --nestedpaging on --vtxvpid on --largepages on
+	VBoxManage modifyvm ${name} --pagefusion ${vbox_page_fusion} ${vbox_vm_flags}
 
 	# Set Paravirtualization driver..
 	VBoxManage modifyvm ${name} --paravirtprovider kvm
-
-	# Change chipset to ICH9 or PIIX3
-	VBoxManage modifyvm ${name} --chipset piix3
-	# VBoxManage modifyvm ${name} --chipset ich9
 
 	# Configure main network interface for management/PXE network
 	add_hostonly_adapter_to_vm ${name} 1 "${nic}" ${vm_boot_nic_type}
