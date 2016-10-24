@@ -1,0 +1,11 @@
+DEVICE=enp0s10
+SLAVE=yes
+MASTER=bond3
+TYPE=Ethernet
+NM_CONTROLLED=no
+BOOTPROTO=none
+ONBOOT=yes
+HOTPLUG=no
+USERCTL=no
+ARP=yes
+ETHTOOL_OPTS="-s ${DEVICE} speed 1000 duplex full autoneg on"
