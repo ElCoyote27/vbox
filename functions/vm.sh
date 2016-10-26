@@ -110,7 +110,7 @@ create_vm() {
 	VBoxManage modifyvm ${name} --rtcuseutc on --memory ${memory_mb} --cpus ${cpu_cores} --vram 64
 
 	# Disable Page Fusion, Enable Large Pages and Nested Paging..
-	VBoxManage modifyvm ${name} --pagefusion ${vbox_page_fusion} ${vbox_vm_flags}
+	VBoxManage modifyvm ${name} ${vbox_vm_flags}
 
 	# Set Paravirtualization driver..
 	VBoxManage modifyvm ${name} --paravirtprovider kvm
@@ -342,9 +342,9 @@ start_vm() {
 	name=${1}
 
 	# Check if we are starting the undercloud VM... If we kept it from a previous
-	# install, make sure Page Fusion is set accordingly...
+	# install, make sure Page Fusion, etc, other flags are set accordingly...
 	if [ "x${name}"  = "x${vm_name_prefix}instack" -a "x${rm_instack}" = "x0" ]; then
-		VBoxManage modifyvm ${name} --pagefusion ${vbox_page_fusion} 
+		VBoxManage modifyvm ${name} ${vbox_vm_flags}
 	fi
 
 	count=0
