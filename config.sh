@@ -24,7 +24,7 @@ rom_path=$(ls -d $(pwd)/rom/*.rom 2>/dev/null | head -1)
 
 # This is the network interface on the host that instack's eth3/bond3 will be bridged too.
 # Try every interface in the list in order..
-hypervisor_bridged_nic_list="enp0s25 bond0 eth0"
+hypervisor_bridged_nic_list="bond0 eth0"
 
 # This file will carry information about the serial ports and instack's IP addres
 vm_serial_info="${HOME}/README_vbox_console.txt"
@@ -53,9 +53,8 @@ rm_instack=0
 
 # By default, if you have plenty of memory, pagefusion isn't used.
 # If memory is scarce, then turn pagefusion on at the expense of more cpu usage.
-vbox_page_fusion="off"
 vbox_vm_flags=""
-vbox_vm_flags="${vbox_vm_flags} --pagefusion ${vbox_page_fusion}"
+vbox_vm_flags="${vbox_vm_flags} --pagefusion off"
 vbox_vm_flags="${vbox_vm_flags} --nestedpaging on"
 vbox_vm_flags="${vbox_vm_flags} --vtxvpid on"
 vbox_vm_flags="${vbox_vm_flags} --vtxux on"
@@ -268,3 +267,10 @@ vm_slave_extra_disk_mb=8388608
 headless=1
 skipinstackmenu="no"
 useserialconsole="yes"
+
+# Override settings with vbox node-specific config
+VBOX_CONFIG=".vbox_config_$(uname -n)"
+if [ -f ${VBOX_CONFIG} ]; then
+	echo "(II) Loading ${VBOX_CONFIG} ..."
+	source ${VBOX_CONFIG}
+fi
