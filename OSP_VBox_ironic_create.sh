@@ -9,8 +9,8 @@
 # Initial setup
 source ./config.sh
 source ./functions/memory.sh
-MYCONF=".config"
-source ${MYCONF}
+VBOX_CONF=".config"
+source ${VBOX_CONF}
 IRONIC_KEY="/home/stack/.ssh/ironic_key"
 VBOX_CREDS=".vbox_creds_$(uname -n)"
 

@@ -3,8 +3,8 @@
 #
 source ./config.sh
 source ./functions/memory.sh
-MYCONF=".config"
-source ${MYCONF}
+VBOX_CONF=".config"
+source ${VBOX_CONF}
 VBOX_CREDS=".vbox_creds_$(uname -n)"
 
 # Credentials
