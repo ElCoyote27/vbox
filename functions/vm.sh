@@ -25,7 +25,7 @@ get_hypervisor_bridged_nic() {
 				break
 			fi
 		done
-		>&2  echo "Selected Bridged NIC: ${myif}"
+		>&2  echo "(II) Selected Bridged NIC: ${myif}"
 	fi
 }
 

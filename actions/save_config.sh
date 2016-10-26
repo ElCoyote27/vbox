@@ -17,6 +17,6 @@ for value in \
 	vm_slave_first_disk_mb hypervisor_bridged_nic_list vbox_vm_flags
 do
 	if [ "x$(eval echo \$${value})" != "x" ]; then
-		echo "${value}=$(eval echo \$${value})" >> ${VBOX_CONF}
+		echo "${value}=\"$(eval echo \$${value})\"" >> ${VBOX_CONF}
 	fi
 done
