@@ -182,14 +182,12 @@ create_hostonly_interfaces() {
 	sleep 1s
 	# Set up IP address and network mask
 	echo "Configuring IP address ${ip} and network mask ${mask} on interface: ${name}..."
-	set -x
 	VBoxManage hostonlyif ipconfig "${id}" --ip ${ip} --netmask ${mask}
 	# Disable IPV6 on ctlplane (nic0)
 	#sleep 1s
 	#if [ "x${id}" = "xvboxnet0" ]; then
 	#	sudo /sbin/sysctl -w net.ipv6.conf.vboxnet0.disable_ipv6=1
 	#fi
-	set +x
 	# Check what we have created actually.
 	# Sometimes VBox occasionally fails to apply settings to the last IFace under Windows
 	if !(check_if_iface_settings_applied "${id}" ${ip} ${mask}); then
