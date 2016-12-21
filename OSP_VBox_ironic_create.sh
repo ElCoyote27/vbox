@@ -85,6 +85,9 @@ do
 	a6=$(echo ${tmpMAC}|cut -c11-12)
 	IRONIC_MAC="${a1}:${a2}:${a3}:${a4}:${a5}:${a6}"
 
+	# Update the VM's description to provide Hypervisor Information
+	ssh ${VBOX_USER}@${VBOX_HOST_IP} "VBoxManage modifyvm ${IRONIC_NODE} --description \"Hypervisor: ${VBOX_HOST}\""
+
 	# Update the VM's properties
 	ssh stack@${INSTACK_HOST_IP} " \
 		. ./stackrc ; \
