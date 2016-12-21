@@ -2,7 +2,7 @@
 # NIC types. Boot NIC must be intel or AMD. Other NICs can be virtio
 # Types: 82540EM, 82545EM, 82543GC, Am79C973, virtio
 vbox_vm_flags=""
-vbox_vm_flags="${vbox_vm_flags} --pagefusion off"
+vbox_vm_flags="${vbox_vm_flags} --pagefusion on"
 vbox_vm_flags="${vbox_vm_flags} --nestedpaging on"
 vbox_vm_flags="${vbox_vm_flags} --vtxvpid on"
 vbox_vm_flags="${vbox_vm_flags} --vtxux on"
