@@ -142,6 +142,7 @@ done
 
 # Last steps:
 
-ssh stack@${INSTACK_HOST_IP} ". ./stackrc ; openstack baremetal configure boot ; openstack baremetal show capabilities"
-
+ssh stack@${INSTACK_HOST_IP} ". ./stackrc ; openstack baremetal configure boot "
+ssh stack@${INSTACK_HOST_IP} ". ./stackrc ; openstack baremetal show capabilities 2> /dev/null"
+ssh stack@${INSTACK_HOST_IP} ". ./stackrc ; openstack overcloud profiles list 2> /dev/null"
 echo "Please remember to: \"openstack baremetal introspection bulk start\" "
