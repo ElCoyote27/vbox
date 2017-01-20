@@ -29,3 +29,5 @@ do
 	VBoxManage modifyvm ${name} ${vbox_vm_flags}
 done
 
+
+for i in $(seq 4 16); do vboxmanage modifyvm osp-baremetal-${i} --memory 8256 ; done
