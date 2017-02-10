@@ -85,9 +85,6 @@ do
 	a6=$(echo ${tmpMAC}|cut -c11-12)
 	IRONIC_MAC="${a1}:${a2}:${a3}:${a4}:${a5}:${a6}"
 
-	# Update the VM's description to provide Hypervisor Information
-	ssh ${VBOX_USER}@${VBOX_HOST_IP} "VBoxManage modifyvm ${IRONIC_NODE} --description \"Hypervisor: ${VBOX_HOST}\""
-
 	# Update the VM's properties
 	ssh stack@${INSTACK_HOST_IP} " \
 		. ./stackrc ; \
@@ -103,13 +100,13 @@ do
 		osp-baremetal-[123])
 			NODE_PROFILE="control"
 			;;
-		osp-baremetal-[456789])
+		osp-baremetal-[456])
 			NODE_PROFILE="ceph-storage"
 			;;
-		osp-baremetal-1[012])
+		osp-baremetal-[789])
 			NODE_PROFILE="swift-storage"
 			;;
-		osp-baremetal-1[345])
+		osp-baremetal-1[012345])
 			NODE_PROFILE="compute"
 			;;
 		*)
@@ -125,6 +122,9 @@ do
 			properties/capabilities=profile:${NODE_PROFILE},boot_option:local \
 			"
 	fi
+
+	# Update the VM's description to provide Hypervisor Information
+	ssh ${VBOX_USER}@${VBOX_HOST_IP} "VBoxManage modifyvm ${IRONIC_NODE} --description \"Hypervisor: ${VBOX_HOST}, Profile: ${NODE_PROFILE}\""
 
 	# Create a port for the VM on the ctlplane network (NIC1)
 	ssh stack@${INSTACK_HOST_IP} " \
