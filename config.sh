@@ -157,7 +157,7 @@ fi
 # You can specify CPU count for your nodes as you wish, but keep in mind resources of your machine.
 # If you don't, then will be used default parameter
 if [ "${CONFIG_FOR}" = "128GB" ]; then
-	vm_master_cpu_cores=2
+	vm_master_cpu_cores=4
 	vm_slave_cpu_default=4
 
 	vm_slave_cpu[1]=4
