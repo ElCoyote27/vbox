@@ -9,11 +9,13 @@ vbox_vm_flags="${vbox_vm_flags} --vtxux on"
 vbox_vm_flags="${vbox_vm_flags} --largepages on"
 vbox_vm_flags="${vbox_vm_flags} --chipset piix3"
 vbox_vm_flags="${vbox_vm_flags} --largepages on"
-vbox_vm_flags="${vbox_vm_flags} --pae off"
+vbox_vm_flags="${vbox_vm_flags} --pae on"
 vbox_vm_flags="${vbox_vm_flags} --longmode on"
 vbox_vm_flags="${vbox_vm_flags} --hpet on"
 vbox_vm_flags="${vbox_vm_flags} --hwvirtex on"
 vbox_vm_flags="${vbox_vm_flags} --triplefaultreset off"
+
+set -x
 
 echo "Final flags: ${vbox_vm_flags}"
 
