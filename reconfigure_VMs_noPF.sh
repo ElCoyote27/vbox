@@ -2,16 +2,18 @@
 # NIC types. Boot NIC must be intel or AMD. Other NICs can be virtio
 # Types: 82540EM, 82545EM, 82543GC, Am79C973, virtio
 vbox_vm_flags=""
-vbox_vm_flags="${vbox_vm_flags} --pagefusion on"
+vbox_vm_flags="${vbox_vm_flags} --pagefusion off"
 vbox_vm_flags="${vbox_vm_flags} --nestedpaging on"
 vbox_vm_flags="${vbox_vm_flags} --vtxvpid on"
 vbox_vm_flags="${vbox_vm_flags} --vtxux on"
 vbox_vm_flags="${vbox_vm_flags} --largepages on"
 vbox_vm_flags="${vbox_vm_flags} --chipset piix3"
 vbox_vm_flags="${vbox_vm_flags} --largepages on"
-vbox_vm_flags="${vbox_vm_flags} --pae on"
+vbox_vm_flags="${vbox_vm_flags} --pae off"
+vbox_vm_flags="${vbox_vm_flags} --apic on"
+vbox_vm_flags="${vbox_vm_flags} --x2apic on"
 vbox_vm_flags="${vbox_vm_flags} --longmode on"
-vbox_vm_flags="${vbox_vm_flags} --hpet on"
+vbox_vm_flags="${vbox_vm_flags} --hpet off"
 vbox_vm_flags="${vbox_vm_flags} --hwvirtex on"
 vbox_vm_flags="${vbox_vm_flags} --triplefaultreset off"
 
@@ -32,4 +34,5 @@ do
 done
 
 
-for i in $(seq 4 16); do vboxmanage modifyvm osp-baremetal-${i} --memory 8256 ; done
+for i in $(seq 1 3); do vboxmanage modifyvm osp-baremetal-${i} --memory 24576 --cpus 4 ; done
+for i in $(seq 4 16); do vboxmanage modifyvm osp-baremetal-${i} --memory 8256 --cpus 4 ; done

@@ -62,8 +62,10 @@ vbox_vm_flags="${vbox_vm_flags} --largepages on"
 vbox_vm_flags="${vbox_vm_flags} --chipset piix3"
 vbox_vm_flags="${vbox_vm_flags} --largepages on"
 vbox_vm_flags="${vbox_vm_flags} --pae off"
+vbox_vm_flags="${vbox_vm_flags} --apic on"
+vbox_vm_flags="${vbox_vm_flags} --x2apic on"
 vbox_vm_flags="${vbox_vm_flags} --longmode on"
-vbox_vm_flags="${vbox_vm_flags} --hpet on"
+vbox_vm_flags="${vbox_vm_flags} --hpet off"
 vbox_vm_flags="${vbox_vm_flags} --hwvirtex on"
 vbox_vm_flags="${vbox_vm_flags} --triplefaultreset off"
 
@@ -207,9 +209,9 @@ if [ "${CONFIG_FOR}" = "128GB" ]; then
 	vm_slave_memory_default=8256
 
 	# Controllers
-	vm_slave_memory_mb[1]=16384
-	vm_slave_memory_mb[2]=16384
-	vm_slave_memory_mb[3]=16384
+	vm_slave_memory_mb[1]=24576
+	vm_slave_memory_mb[2]=24576
+	vm_slave_memory_mb[3]=24576
 	# Ceph
 	vm_slave_memory_mb[4]=8256
 	vm_slave_memory_mb[5]=8256
