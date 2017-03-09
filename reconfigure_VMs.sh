@@ -26,10 +26,14 @@ if [ $total_memory -gt 67108864 ]; then
 	vbox_vm_flags="${vbox_vm_flags} --pagefusion off"
 	ctrl_mem=24576
 	ctrl_cpus=4
+	cmpt_mem=8256
+	cmpt_cpus=4
 else
 	vbox_vm_flags="${vbox_vm_flags} --pagefusion on"
-	ctrl_mem=16384
+	ctrl_mem=12800
 	ctrl_cpus=4
+	cmpt_mem=6272
+	cmpt_cpus=4
 fi
 
 echo "(II) CONFIG_FOR: $((${total_memory}/(1024)))Mb, CTRL_MEM: ${ctrl_mem}Mb. CTRL_CPUS: ${ctrl_cpus}"
@@ -50,8 +54,10 @@ do
 done
 
 # RAM/cpus might be different for controllers...
+echo "(II) Reconfiguring Controllers : --memory ${ctrl_mem} --cpus ${ctrl_cpus}..."
 vboxmanage modifyvm osp-instack --memory ${ctrl_mem} --cpus ${ctrl_cpus} 
 for i in $(seq 1 3); do vboxmanage modifyvm osp-baremetal-${i} --memory ${ctrl_mem} --cpus ${ctrl_cpus} ; done
 
+echo "(II) Reconfiguring Other Nodes : --memory ${cmpt_mem} --cpus ${cmpt_cpus}..."
 # Computes/ceph/etc...
-for i in $(seq 4 16); do vboxmanage modifyvm osp-baremetal-${i} --memory 8256 --cpus 4 ; done
+for i in $(seq 4 16); do vboxmanage modifyvm osp-baremetal-${i} --memory ${cmpt_mem} --cpus ${cmpt_cpus} ; done
