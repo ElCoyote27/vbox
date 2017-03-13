@@ -21,19 +21,20 @@ vbox_vm_flags="${vbox_vm_flags} --longmode on"
 vbox_vm_flags="${vbox_vm_flags} --hpet off"
 vbox_vm_flags="${vbox_vm_flags} --hwvirtex on"
 vbox_vm_flags="${vbox_vm_flags} --triplefaultreset off"
+vm_slave_first_disk_mb=131072
 
 if [ $total_memory -gt 67108864 ]; then
 	vbox_vm_flags="${vbox_vm_flags} --pagefusion off"
 	ctrl_mem=24576
-	ctrl_cpus=4
+	ctrl_cpus=2
 	cmpt_mem=8256
-	cmpt_cpus=4
+	cmpt_cpus=2
 else
 	vbox_vm_flags="${vbox_vm_flags} --pagefusion on"
 	ctrl_mem=12800
-	ctrl_cpus=4
+	ctrl_cpus=2
 	cmpt_mem=6272
-	cmpt_cpus=4
+	cmpt_cpus=2
 fi
 
 echo "(II) CONFIG_FOR: $((${total_memory}/(1024)))Mb, CTRL_MEM: ${ctrl_mem}Mb. CTRL_CPUS: ${ctrl_cpus}"
@@ -54,10 +55,18 @@ do
 done
 
 # RAM/cpus might be different for controllers...
-echo "(II) Reconfiguring Controllers : --memory ${ctrl_mem} --cpus ${ctrl_cpus}..."
+echo "(II) Reconfiguring Controllers : --memory ${ctrl_mem} --cpus ${ctrl_cpus}, disk0 --resize ${vm_slave_first_disk_mb}..."
 vboxmanage modifyvm osp-instack --memory ${ctrl_mem} --cpus ${ctrl_cpus} 
-for i in $(seq 1 3); do vboxmanage modifyvm osp-baremetal-${i} --memory ${ctrl_mem} --cpus ${ctrl_cpus} ; done
+for i in $(seq 1 3); do
+	vboxmanage modifyvm osp-baremetal-${i} --memory ${ctrl_mem} --cpus ${ctrl_cpus}
+	disk_path=$(vboxmanage showvminfo osp-baremetal-${i}|grep 'SATA (0, 0)'|awk '{ print $4}')
+	vboxmanage modifyhd ${disk_path} --resize ${vm_slave_first_disk_mb}
+done
 
-echo "(II) Reconfiguring Other Nodes : --memory ${cmpt_mem} --cpus ${cmpt_cpus}..."
+echo "(II) Reconfiguring Other Nodes : --memory ${cmpt_mem} --cpus ${cmpt_cpus}, disk0 --resize ${vm_slave_first_disk_mb}..."
 # Computes/ceph/etc...
-for i in $(seq 4 16); do vboxmanage modifyvm osp-baremetal-${i} --memory ${cmpt_mem} --cpus ${cmpt_cpus} ; done
+for i in $(seq 4 16); do
+	vboxmanage modifyvm osp-baremetal-${i} --memory ${cmpt_mem} --cpus ${cmpt_cpus}
+	disk_path=$(vboxmanage showvminfo osp-baremetal-${i}|grep 'SATA (0, 0)'|awk '{ print $4}')
+	vboxmanage modifyhd ${disk_path} --resize ${vm_slave_first_disk_mb}
+done

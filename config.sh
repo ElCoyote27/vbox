@@ -85,9 +85,9 @@ case "$(uname)" in
 	Linux)
 		os_type="linux"
 		if [ "$(nproc)" -gt "2" ]; then
-			vm_master_cpu_cores=4
-		else
 			vm_master_cpu_cores=2
+		else
+			vm_master_cpu_cores=1
 		fi
 		;;
 	Darwin)
@@ -118,7 +118,7 @@ vbox_overcommit_ratio=0.5
 
 # Master node settings
 vm_master_memory_mb=24576
-vm_master_disk_mb=65535
+vm_master_disk_mb=131072
 
 # Master node access to the internet through the host system, using VirtualBox NAT adapter
 #vm_master_nat_network=192.168.200.0/24
@@ -261,7 +261,7 @@ fi
 # operating system (Base OS), VMs (Virtual Storage), Ceph or other function,
 # depending on the roles applied to the server.
 # Nodes with combined roles may require more disk space.
-vm_slave_first_disk_mb=65535
+vm_slave_first_disk_mb=131072
 vm_slave_second_disk_mb=8388608
 vm_slave_extra_disk_mb=8388608
 
