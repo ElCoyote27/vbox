@@ -61,6 +61,7 @@ for i in $(seq 1 3); do
 	vboxmanage modifyvm osp-baremetal-${i} --memory ${ctrl_mem} --cpus ${ctrl_cpus}
 	disk_path=$(vboxmanage showvminfo osp-baremetal-${i}|grep 'SATA (0, 0)'|awk '{ print $4}')
 	vboxmanage modifyhd ${disk_path} --resize ${vm_slave_first_disk_mb}
+	vboxmanage storagectl osp-baremetal-${i} --name SATA --hostiocache on
 done
 
 echo "(II) Reconfiguring Other Nodes : --memory ${cmpt_mem} --cpus ${cmpt_cpus}, disk0 --resize ${vm_slave_first_disk_mb}..."
@@ -69,4 +70,5 @@ for i in $(seq 4 16); do
 	vboxmanage modifyvm osp-baremetal-${i} --memory ${cmpt_mem} --cpus ${cmpt_cpus}
 	disk_path=$(vboxmanage showvminfo osp-baremetal-${i}|grep 'SATA (0, 0)'|awk '{ print $4}')
 	vboxmanage modifyhd ${disk_path} --resize ${vm_slave_first_disk_mb}
+	vboxmanage storagectl osp-baremetal-${i} --name SATA --hostiocache on
 done

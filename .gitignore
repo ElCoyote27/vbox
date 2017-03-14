@@ -1,0 +1,16 @@
+*.log
+*.swp
+outputs/*
+.vbox_config_daltigoth
+.vbox_config_eno-eh12-b1
+.vbox_config_palanthas
+.vbox_config_skullcap
+.vbox_config_thorbardin
+.vbox_creds_daltigoth
+.vbox_creds_eno-eh12-b1
+.vbox_creds_palanthas
+.vbox_creds_skullcap
+.vbox_creds_thorbardin
+images/osp-instack_0.vdi
+iso/ipxe.iso
+.config
