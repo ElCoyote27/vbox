@@ -56,7 +56,7 @@ do
 	# Create ironic node..
 	ssh stack@${INSTACK_HOST_IP} " \
 		. ./stackrc ; ironic node-create -n ${IRONIC_NODE} \
-		-d pxe_ssh \
+		-d pxe_ssh -p cpus=${vm_slave_cpu_default} -p memory_mb=${vm_slave_memory_default} \
 		-i ssh_address=${VBOX_HOST_IP} \
 		-i ssh_username=${VBOX_USER} \
 		-i ssh_virt_type=vbox \
