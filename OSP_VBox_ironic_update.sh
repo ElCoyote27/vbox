@@ -53,37 +53,11 @@ for i in $(seq 1 ${cluster_size})
 do
 	IRONIC_NODE="osp-baremetal-${i}"
 
-	# Create ironic node..
-	ssh stack@${INSTACK_HOST_IP} " \
-		. ./stackrc ; ironic node-create -n ${IRONIC_NODE} \
-		-d pxe_ssh -p cpus=${vm_slave_cpu_default} -p memory_mb=${vm_slave_memory_default} \
-		-i ssh_address=${VBOX_HOST_IP} \
-		-i ssh_username=${VBOX_USER} \
-		-i ssh_virt_type=vbox \
-		-i ssh_key_contents=\"\$(cat ${IRONIC_KEY} ) \" "
-
-		##### These do not work yet (20160310)
-		##### -i ssh_key_filename=/home/stack/ironic_rsa \
-		##### This one works but haem.... YMV (20160310)
-		##### -i ssh_password=\"${VBOX_USER_PWD}\" \
-
 	# Find the UUID from the ironic node creatd previously
 	IRONIC_UUID=$(ssh stack@${INSTACK_HOST_IP} " \
 		. ./stackrc ; \
 		ironic node-show ${IRONIC_NODE}| \
 		awk '{ if ( \$2 == \"uuid\" )  { print \$4 } }' ")
-
-	# Find and process MAC address
-	tmpMAC=$( (ssh ${VBOX_USER}@${VBOX_HOST_IP} " \
-		 VBoxManage showvminfo ${IRONIC_NODE}")|grep NIC.1|sed -e 's/.*MAC: *//' -e 's/,.*//')
-
-	a1=$(echo ${tmpMAC}|cut -c-2)
-	a2=$(echo ${tmpMAC}|cut -c3-4)
-	a3=$(echo ${tmpMAC}|cut -c5-6)
-	a4=$(echo ${tmpMAC}|cut -c7-8)
-	a5=$(echo ${tmpMAC}|cut -c9-10)
-	a6=$(echo ${tmpMAC}|cut -c11-12)
-	IRONIC_MAC="${a1}:${a2}:${a3}:${a4}:${a5}:${a6}"
 
 	# Update the VM's properties
 	ssh stack@${INSTACK_HOST_IP} " \
@@ -125,12 +99,6 @@ do
 
 	# Update the VM's description to provide Hypervisor Information
 	ssh ${VBOX_USER}@${VBOX_HOST_IP} "VBoxManage modifyvm ${IRONIC_NODE} --description \"Hypervisor: ${VBOX_HOST}, Profile: ${NODE_PROFILE}\""
-
-	# Create a port for the VM on the ctlplane network (NIC1)
-	ssh stack@${INSTACK_HOST_IP} " \
-		. ./stackrc ; \
-		ironic port-create -n ${IRONIC_UUID} -a ${IRONIC_MAC} \
-		"
 
 	# Set the power state to 'off'
 	ssh stack@${INSTACK_HOST_IP} " \
