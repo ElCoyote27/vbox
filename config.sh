@@ -85,9 +85,9 @@ case "$(uname)" in
 	Linux)
 		os_type="linux"
 		if [ "$(nproc)" -gt "2" ]; then
-			vm_master_cpu_cores=2
+			vm_master_cpu_cores=4
 		else
-			vm_master_cpu_cores=1
+			vm_master_cpu_cores=2
 		fi
 		;;
 	Darwin)
