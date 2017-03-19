@@ -33,13 +33,15 @@ if [ "x${INSTACK_HOST_IP}" = "x" ]; then
 fi
 
 # Sanity Check
-ssh -q stack@${INSTACK_HOST_IP} test -f stackrc
-if [ $? -ne 0 ]; then
-	echo "(EE) Stack not installed or no \$HOME/stackrc file found!"
-	exit 127
-fi
+#ssh -q stack@${INSTACK_HOST_IP} test -f stackrc
+#if [ $? -ne 0 ]; then
+#	echo "(EE) Stack not installed or no \$HOME/stackrc file found!"
+#	exit 127
+#fi
 
 #cat << EOF
+INSTACK_JSON="instackenv.json.${VBOX_HOST}"
+echo "(II) Building ${INSTACK_JSON}..."
 cat << EOF > instackenv.json
 {
   "ssh-user": "${VBOX_USER}",
@@ -309,3 +311,5 @@ cat << EOF > instackenv.json
   ]
 }
 EOF
+
+echo -e "(II) Now do:\nscp -p ${INSTACK_JSON} stack@${INSTACK_HOST}:instackenv.json\nssh stack@${INSTACK_HOST} openstack baremetal import instackenv.json"
