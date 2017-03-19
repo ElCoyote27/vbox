@@ -75,7 +75,7 @@ do
 
 	# Find and process MAC address
 	tmpMAC=$( (ssh ${VBOX_USER}@${VBOX_HOST_IP} " \
-		 VBoxManage showvminfo ${IRONIC_NODE}")|grep NIC.1|sed -e 's/.*MAC: *//' -e 's/,.*//')
+		 vboxmanage showvminfo ${IRONIC_NODE}")|grep NIC.1|sed -e 's/.*MAC: *//' -e 's/,.*//')
 
 	a1=$(echo ${tmpMAC}|cut -c-2)
 	a2=$(echo ${tmpMAC}|cut -c3-4)
@@ -124,7 +124,7 @@ do
 	fi
 
 	# Update the VM's description to provide Hypervisor Information
-	ssh ${VBOX_USER}@${VBOX_HOST_IP} "VBoxManage modifyvm ${IRONIC_NODE} --description \"Hypervisor: ${VBOX_HOST}, Profile: ${NODE_PROFILE}\""
+	ssh ${VBOX_USER}@${VBOX_HOST_IP} vboxmanage modifyvm ${IRONIC_NODE} --description \'Hypervisor: ${VBOX_HOST}, Profile: ${NODE_PROFILE}\'
 
 	# Create a port for the VM on the ctlplane network (NIC1)
 	ssh stack@${INSTACK_HOST_IP} " \
@@ -142,7 +142,9 @@ done
 
 # Last steps:
 
+echo -n "(II) Running openstack baremetal configure boot..."
 ssh stack@${INSTACK_HOST_IP} ". ./stackrc ; openstack baremetal configure boot "
+if [ $? -eq 0 ]; then echo OK ; fi
 ssh stack@${INSTACK_HOST_IP} ". ./stackrc ; openstack baremetal show capabilities 2> /dev/null"
 ssh stack@${INSTACK_HOST_IP} ". ./stackrc ; openstack overcloud profiles list 2> /dev/null"
 echo "Please remember to: \"openstack baremetal introspection bulk start\" "
