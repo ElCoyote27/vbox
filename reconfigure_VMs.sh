@@ -26,7 +26,7 @@ vm_slave_first_disk_mb=131072
 if [ $total_memory -gt 67108864 ]; then
 	vbox_vm_flags="${vbox_vm_flags} --pagefusion off"
 	ctrl_mem=24576
-	ctrl_cpus=2
+	ctrl_cpus=4
 	cmpt_mem=8256
 	cmpt_cpus=2
 else
