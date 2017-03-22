@@ -155,9 +155,11 @@ create_vm() {
 
 	# Create and attach the main hard drive
 	add_disk_to_vm ${name} 0 ${disk_mb}
+	# Small tunable to avoid 'unable to mount root on unknown(0,0) upon reboot.."
+	vboxmanage setextradata ${name} "VBoxInternal/Devices/ahci/0/LUN0/Config/IgnoreFlush" 0
 
 	# Expose Memory
-	VBoxManage setextradata ${vm_name} "VBoxInternal/Devices/pcbios/0/Config/DmiExposeMemoryTable" "1"
+	VBoxManage setextradata ${name} "VBoxInternal/Devices/pcbios/0/Config/DmiExposeMemoryTable" "1"
 }
 
 add_hostonly_adapter_to_vm() {
