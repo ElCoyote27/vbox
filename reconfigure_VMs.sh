@@ -14,8 +14,8 @@ vbox_vm_flags="${vbox_vm_flags} --nestedpaging on"
 vbox_vm_flags="${vbox_vm_flags} --vtxvpid on"
 vbox_vm_flags="${vbox_vm_flags} --vtxux on"
 vbox_vm_flags="${vbox_vm_flags} --largepages on"
-#vbox_vm_flags="${vbox_vm_flags} --chipset piix3"
-vbox_vm_flags="${vbox_vm_flags} --chipset ich9"
+vbox_vm_flags="${vbox_vm_flags} --chipset piix3"
+#vbox_vm_flags="${vbox_vm_flags} --chipset ich9"
 vbox_vm_flags="${vbox_vm_flags} --largepages on"
 vbox_vm_flags="${vbox_vm_flags} --pae off"
 vbox_vm_flags="${vbox_vm_flags} --apic on"
@@ -27,7 +27,7 @@ vbox_vm_flags="${vbox_vm_flags} --triplefaultreset off"
 vm_slave_first_disk_mb=131072
 
 if [ $total_memory -gt 67108864 ]; then
-	vbox_vm_flags="${vbox_vm_flags} --pagefusion off"
+	vbox_vm_flags="${vbox_vm_flags} --pagefusion on"
 	instack_cpus=4
 	ctrl_mem=24576
 	ctrl_cpus=4
@@ -76,7 +76,7 @@ for i in $(seq 1 16); do
 	echo "(II) Reconfiguring node osp-baremetal-${i}.. : --hostiocache on, IgnoreFlush=0, DmiExposeMemoryTable=1, disk0 --resize ${vm_slave_first_disk_mb}, ... "
 	disk_path=$(vboxmanage showvminfo osp-baremetal-${i}|grep 'SATA (0, 0)'|awk '{ print $4}')
 	cur_size=$(vboxmanage showmediuminfo ${disk_path}|awk '/Capacity:/ { print $2}')
-	if [ ${cur_size} -ne ${vm_slave_first_disk_mb} ];
+	if [ ${cur_size} -ne ${vm_slave_first_disk_mb} ]; then
 		vboxmanage modifyhd ${disk_path} --resize ${vm_slave_first_disk_mb}
 	fi
 	vboxmanage storagectl osp-baremetal-${i} --name SATA --hostiocache on
